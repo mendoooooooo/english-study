@@ -472,18 +472,23 @@ const PICS=[['xs0_4EN7osM','Una coppia che cucina insieme in cucina'],['wFoo0y1H
 ['BjRByKbKqdo','Un gruppo di persone che fa escursionismo'],['jokec_3IzHU','Escursionisti che salgono una collina'],['MwCIIozsbmQ','Escursionisti su un sentiero roccioso'],
 ['1Nm3DpE8g-o','Una coppia che balla in cucina'],['Z1_9CbuR46g','Una coppia che balla il tango'],['9kqqVCgMdBA','Coppie che ballano in una sala'],
 ['8-56D4-e2vo','Una coppia che prepara il cibo in cucina'],['N5jZksBBIaM','Ragazzi che giocano a calcio'],['LSnNnxRyssI','Un uomo che corre di giorno'],['1-nuy7fD3fw','Un corridore che scatta su una pista'],['PxnZHqLJ0lQ','Una persona con lo zaino che sale una collina rocciosa'],['AGsii9KWbDE','Una donna che balla circondata da persone'],['_v8C6BlpBzY','Un gruppo di ballerini hip hop'],['-gCxJpPORk4','Un uomo e una donna che ballano'],['cas-O7ykPVg','Persone che ballano e sorridono al tramonto'],['o20S0-tsnro','Coppie che ballano su un pavimento lucido'],['Dg8WzlOE1as','Studenti che studiano insieme a un lungo tavolo'],['l-M9fs0pNuQ','Persone che fanno la spesa in un mercato all\'aperto'],['8Tp2WW-WRIw','Persone che mangiano durante un picnic'],
-['071AcrOX8fA','Una donna che porta a spasso il cane sul marciapiede'],['m2OytUT2qxY','Una persona che porta a spasso il cane sulla spiaggia'],['5ai6kpW4NOw','Un gruppo di persone che fa flessioni in palestra'],['IYLLF511aOY','Una donna che solleva pesi in palestra'],['7eBHTcyVT4A','Un uomo che usa un macchinario in palestra'],['z9VbZ4tM3Zc','Una donna che si allena in palestra'],['8c0ndhIXDzQ','Studenti che ascoltano una lezione e prendono appunti'],['RDBb3JUdOnc','Studenti che prendono appunti in un\'aula'],['nrE0LK_qN7E','Un professore che tiene lezione agli studenti']];
-let picUrl='',picId=0,lastP=-1;
+['071AcrOX8fA','Una donna che porta a spasso il cane sul marciapiede'],['m2OytUT2qxY','Una persona che porta a spasso il cane sulla spiaggia'],['5ai6kpW4NOw','Un gruppo di persone che fa flessioni in palestra'],['IYLLF511aOY','Una donna che solleva pesi in palestra'],['7eBHTcyVT4A','Un uomo che usa un macchinario in palestra'],['z9VbZ4tM3Zc','Una donna che si allena in palestra'],['8c0ndhIXDzQ','Studenti che ascoltano una lezione e prendono appunti'],['RDBb3JUdOnc','Studenti che prendono appunti in un\'aula'],['nrE0LK_qN7E','Un professore che tiene lezione agli studenti'],
+['n2GD1-_atM0','Bambini che giocano in un parco con le fontane'],['_3wmeEfRdgE','Bambini che giocano a calcio'],['b8rkmfxZjdU','Tre ragazzini che corrono in un prato'],['oA40vPBP08c','Un bambino che corre in un campo con un frisbee'],['50-DO5dCfpI','Persone che camminano e vanno in bicicletta in un parco'],['Efqto2rHSbk','Tre persone in bicicletta in un parco'],['FkFCGm4OcXA','Due persone che vanno in bicicletta su una strada'],['nQYqEwimp5o','Un gruppo di ciclisti su strada']];
+let picUrl='',picId=0,lastP=-1,bag=[];
+const BK='eng_bag';
+try{const b=JSON.parse(localStorage.getItem(BK));if(b&&b.n===PICS.length&&Array.isArray(b.b))bag=b.b.filter(i=>i<PICS.length)}catch(e){}
+function draw(){
+  if(!bag.length){bag=PICS.map((_,i)=>i).sort(()=>Math.random()-.5);if(bag.length>1&&bag[bag.length-1]===lastP){const t=bag[0];bag[0]=bag[bag.length-1];bag[bag.length-1]=t}}
+  const k=bag.pop();try{localStorage.setItem(BK,JSON.stringify({n:PICS.length,b:bag}))}catch(e){}
+  return k}
 function newPic(){
-  stopMic();const id=++picId,p=$('#pic'),tried=new Set();
+  stopMic();const id=++picId,p=$('#pic');let tries=0;
   $('#txt').value='';$('#res').classList.add('hidden');$('#micn').textContent='';
   p.textContent='Carico un\'immagine…';$('#srcn').textContent='';
   const next=()=>{
     if(id!==picId)return;
-    const left=PICS.map((_,i)=>i).filter(i=>!tried.has(i)&&i!==lastP);
-    if(!left.length||tried.size>=8){p.textContent='Impossibile caricare le immagini: controlla la connessione e riprova.';return}
-    const k=left[Math.floor(Math.random()*left.length)];tried.add(k);
-    const im=new Image();im.alt='Immagine da descrivere';
+    if(tries++>=8){p.textContent='Impossibile caricare le immagini: controlla la connessione e riprova.';return}
+    const k=draw(),im=new Image();im.alt='Immagine da descrivere';
     im.onload=()=>{if(id!==picId)return;lastP=k;picUrl=im.src;p.textContent='';p.appendChild(im);$('#srcn').textContent=PICS[k][1]?'Scena: '+PICS[k][1]:''};
     im.onerror=next;im.src=u(PICS[k][0])};
   next()}
