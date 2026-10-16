@@ -189,10 +189,10 @@ details{margin-top:14px;background:var(--card);border:1px solid var(--line);bord
     <button class="btn ghost" id="translateOpen">🌐 Traduci parola</button>
   </div>
   
-  <!-- Scheda Traduttore Interna -->
+  <!-- Scheda Traduttore Interna con Fallback Automatico -->
   <div class="card hidden" id="translator" style="margin-top:18px;text-align:left;padding:22px">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-      <h3 style="font-size:1.35rem;margin:0">Traduttore IT → EN</h3>
+      <h3 style="font-size:1.35rem;margin:0">Traduttore Rapido</h3>
       <button class="btn ghost" id="translateClose" aria-label="Chiudi traduttore" style="padding:6px 12px;border-radius:50%">✕</button>
     </div>
     <p class="lead" style="margin-top:8px">Scrivi una parola o frase in italiano:</p>
@@ -578,7 +578,7 @@ function evaluate(){
 
 $('#ok').addEventListener('click', evaluate);
 
-/* ---------- TRADUZIONE AUTOMATICA INTEGRATA (IT -> EN) ---------- */
+/* ---------- TRADUZIONE CON FALLBACK AUTOMATICO SU GOOGLE TRANSLATE ---------- */
 $('#translateOpen').onclick=()=>{
   $('#translator').classList.remove('hidden');
   $('#translationResult').classList.add('hidden');
@@ -600,32 +600,36 @@ async function translateWordInline(){
   resBox.innerHTML='<b>Traduzione in corso…</b>';
 
   try {
-    const response = await fetch("https://translate.argosopentech.com/translate", {
-      method: "POST",
-      body: JSON.stringify({
-        q: word,
-        source: "it",
-        target: "en",
-        format: "text"
-      }),
-      headers: { "Content-Type": "application/json" }
-    });
-    
+    const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=it|en`);
     if(!response.ok) throw new Error('Errore di connessione');
     const data = await response.json();
-    let translated = data?.translatedText;
+    let translated = data?.responseData?.translatedText;
 
-    if(!translated){
-      throw new Error('Traduzione non disponibile');
+    if(!translated || data.responseStatus !== 200 || /MYMEMORY WARNING/i.test(translated)){
+      throw new Error('Servizio non disponibile');
+    }
+
+    // Pulizia da simboli o ripetizioni
+    translated = translated.replace(/[?!]/g, '').trim();
+    const parts = translated.split(/\s+/);
+    if(parts.length === 2 && parts[0].toLowerCase() === parts[1].toLowerCase()) {
+      translated = parts[0];
     }
 
     resBox.className='fb ok';
     resBox.innerHTML=`<b>Traduzione in inglese:</b><div class="ans">${translated}</div><button class="btn ghost" id="listenTranslation" style="margin-top:8px">🔊 Ascolta</button>`;
-    $('#listenTranslation').onclick = () => speak(translated);
+    $('#listenTranslation', resBox)?.addEventListener('click', () => speak(translated));
+    // Semplificazione ascolto
+    const btnListen = resBox.querySelector('#listenTranslation');
+    if(btnListen) btnListen.onclick = () => speak(translated);
 
   } catch(err) {
+    // FALLBACK AUTOMATICO: se l'API interna fallisce, apre Google Translate in un'altra scheda con la frase precompilata
     resBox.className='fb no';
-    resBox.innerHTML=`<b>Traduzione non riuscita.</b><p class="lead" style="margin:6px 0">Verifica la connessione a internet.</p>`;
+    resBox.innerHTML=`<b>Apertura di Google Translate in corso…</b><p class="lead" style="margin:6px 0">Ti stiamo reindirizzando alla pagina ufficiale con la traduzione pronta.</p>`;
+    
+    const gUrl = `https://translate.google.com/?sl=it&tl=en&text=${encodeURIComponent(word)}&op=translate`;
+    window.open(gUrl, '_blank');
   }
 }
 
