@@ -108,7 +108,7 @@ textarea{min-height:140px}
 details{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px}summary{cursor:pointer;color:var(--gold)}details p{color:var(--mute);font-size:.9rem;margin-top:8px}
 .tw{position:relative}.tw .tile{width:100%;height:100%}.tw .del{position:absolute;top:10px;right:10px;background:var(--bg2);border-radius:50%;width:36px;height:36px;z-index:2}
 .tile.add{border-style:dashed;background:transparent;min-height:0}
-.sheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:620px;z-index:50;background:var(--card);border:1px solid var(--gold);border-bottom:0;border-radius:22px 22px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));box-shadow:0 -20px 50px #000a;max-height:80dvh;overflow:auto}
+.sheet{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:560px;z-index:50;background:var(--card);border:1.5px solid var(--gold);border-radius:22px;padding:16px;box-shadow:0 0 0 100vmax #000a;max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow:auto}
 .shh{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .sm{padding:6px 12px;border-radius:12px;margin-left:6px}
 a.btn{text-decoration:none;display:inline-block}
@@ -464,9 +464,14 @@ function showSec(k){
   newQuiz()}
 
 /* ---------- DESCRIBE ---------- */
-const u=id=>`https://images.unsplash.com/photo-${id}?w=900&h=560&fit=crop`;
-const PICS=[['1522071820081-009f0129c71c','Colleghi che lavorano insieme in ufficio'],['1556910103-1c02745aae4d','Persone che cucinano insieme'],['1523240795612-9a054b0db644','Studenti che studiano'],['1533900298318-6b8da08a523e','Persone che fanno acquisti al mercato'],['1517486808906-6ca8b3f04846','Amici che passeggiano nel parco'],['1531482615713-2afd69097998','Riunione di lavoro in corso'],['1517248135467-4c7edcad34c4','Clienti che mangiano in un ristorante'],['1488521787991-ed7bbaae773c','Volontari che aiutano i bambini'],['1573496359142-b8d87734a5a2','Presentazione aziendale con pubblico'],['1516321318423-f06f85e504b3','Persone che usano i computer in aula'],
-['1529156069898-49953e39b3ac'],['1511632765486-a01980e01a18'],['1521737604893-d14cc237f11d'],['1543269865-cbf427effbad'],['1559027615-cd4628902d4a'],['1519741497674-611481863552'],['1503454537195-1dcabb73ffb9'],['1522202176988-66273c2fd55f'],['1524178232363-1fb2b075b655'],['1528605248644-14dd04022da1'],['1530268729831-4b0b9e170218'],['1517457373958-b7bdd4587205'],['1529626455594-4ff0802cfb7e'],['1475721027785-f74eccf877e2'],['1511795409834-ef04bbd61622'],['1491438590914-bc09fcaaf77a']];
+const u=id=>`https://unsplash.com/photos/${id}/download?force=true&w=900`;
+const PICS=[['xs0_4EN7osM','Una coppia che cucina insieme in cucina'],['wFoo0y1Hr58','Un gruppo di persone che prepara il cibo in cucina'],['m9cBmbOQCmQ','Una famiglia che cucina insieme'],['kYh-O1Jk7EE','Un uomo che aiuta una donna a cucinare'],
+['hUS8xF6PkoM','Un gruppo di persone che gioca a calcio'],['VTI1PJD7HP8','Giovani che giocano a calcio'],
+['TL7G0hznFbM','Persone che fanno jogging in un parco'],['s2VHO1klUp8','Un uomo che corre su un sentiero nel parco'],['AGVUNQiEBpg','Una persona che corre sulla spiaggia'],
+['iBCDIguykAs','Una bambina che si dondola su un\'altalena'],['-o1yUD1u_8E','Bambini che saltano e giocano'],
+['BjRByKbKqdo','Un gruppo di persone che fa escursionismo'],['jokec_3IzHU','Escursionisti che salgono una collina'],['MwCIIozsbmQ','Escursionisti su un sentiero roccioso'],
+['1Nm3DpE8g-o','Una coppia che balla in cucina'],['Z1_9CbuR46g','Una coppia che balla il tango'],['9kqqVCgMdBA','Coppie che ballano in una sala'],
+['8-56D4-e2vo','Una coppia che prepara il cibo in cucina'],['N5jZksBBIaM','Ragazzi che giocano a calcio'],['LSnNnxRyssI','Un uomo che corre di giorno'],['1-nuy7fD3fw','Un corridore che scatta su una pista'],['PxnZHqLJ0lQ','Una persona con lo zaino che sale una collina rocciosa'],['AGsii9KWbDE','Una donna che balla circondata da persone'],['_v8C6BlpBzY','Un gruppo di ballerini hip hop'],['-gCxJpPORk4','Un uomo e una donna che ballano'],['cas-O7ykPVg','Persone che ballano e sorridono al tramonto'],['o20S0-tsnro','Coppie che ballano su un pavimento lucido'],['Dg8WzlOE1as','Studenti che studiano insieme a un lungo tavolo'],['l-M9fs0pNuQ','Persone che fanno la spesa in un mercato all\'aperto'],['8Tp2WW-WRIw','Persone che mangiano durante un picnic']];
 let picUrl='',picId=0,lastP=-1;
 function newPic(){
   stopMic();const id=++picId,p=$('#pic'),tried=new Set();
