@@ -404,58 +404,38 @@ function showSec(k){
 
 /* ---------- DESCRIBE ---------- */
 let picUrl='',picId=0;
-function scene(){
-  const R=(a,b)=>a+Math.random()*(b-a),P=a=>a[Math.floor(Math.random()*a.length)];
-  const sky=P([['#9ad1ff','#e8f6ff'],['#ffb88c','#ffe6c7'],['#a8b5ff','#f1e9ff'],['#7fd1c7','#eafff8']]);
-  const col=['#e4572e','#29335c','#f3a712','#4a7c59','#a846a0','#2e86ab','#f06c9b'];
-  let s=`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient></defs><rect width="900" height="560" fill="url(#g)"/>`;
-  s+=`<circle cx="${R(100,800)}" cy="${R(70,130)}" r="${R(40,60)}" fill="#fff6a8"/>`;
-  for(let i=0;i<2;i++){const x=R(60,700),y=R(60,160);s+=`<ellipse cx="${x}" cy="${y}" rx="70" ry="24" fill="#fff" opacity=".85"/><ellipse cx="${x+40}" cy="${y-14}" rx="45" ry="22" fill="#fff" opacity=".85"/>`}
-  s+='<path d="M0 360 Q200 290 420 350 T900 330 V560 H0Z" fill="#7bb274"/><rect y="430" width="900" height="130" fill="#5f9a5a"/>';
-  const tx=P([90,780]);s+=`<rect x="${tx}" y="250" width="26" height="170" fill="#7a4b2a"/><circle cx="${tx+13}" cy="230" r="80" fill="#2f7d4f"/>`;
-  if(Math.random()<.5)s+='<rect x="330" y="290" width="150" height="110" fill="#f2d7a7"/><path d="M315 292 L405 220 L495 292Z" fill="#b5483a"/><rect x="385" y="340" width="40" height="60" fill="#6b4226"/>';
-  const actions=['walk','wave','run','dance','work','play'];
-  const n=Math.floor(R(2,5));
-  for(let i=0;i<n;i++){const x=150+i*(600/n)+R(-20,20),y=R(430,490),k=R(.8,1.2),c=P(col),sm=Math.random()<.7,act=P(actions);
-    let arms=act==='wave'?'M-28 -105 L-48 -60 M28 -105 L48 -155':act==='run'?'M-28 -105 L-65 -75 M28 -105 L65 -135':act==='dance'?'M-28 -105 L-58 -150 M28 -105 L60 -155':act==='work'?'M-28 -105 L-45 -55 M28 -105 L45 -55':act==='play'?'M-28 -105 L-55 -70 M28 -105 L65 -75':'M-28 -105 L-48 -60 M28 -105 L48 -60';
-    const legs=act==='run'?'M-12 0 L-42 42 M12 0 L45 25':act==='dance'?'M-12 0 L-45 35 M12 0 L40 40':'M-12 0 L-20 48 M12 0 L22 48';
-    s+=`<g transform="translate(${x} ${y}) scale(${k})"><path d="${arms}" stroke="${c}" stroke-width="14" stroke-linecap="round" fill="none"/><rect x="-30" y="-110" width="60" height="110" rx="26" fill="${c}"/><path d="${legs}" stroke="#29335c" stroke-width="15" stroke-linecap="round" fill="none"/><circle cx="0" cy="-140" r="28" fill="#f1c9a5"/><circle cx="-9" cy="-146" r="3" fill="#222"/><circle cx="9" cy="-146" r="3" fill="#222"/><path d="${sm?'M-12 -130 Q0 -118 12 -130':'M-12 -126 Q0 -134 12 -126'}" stroke="#222" stroke-width="3" fill="none"/></g>`;
-    if(act==='play')s+=`<circle cx="${x+55}" cy="${y-40}" r="13" fill="#f2c66d"/>`;
-  }
-  return 'data:image/svg+xml;utf8,'+encodeURIComponent(s+'</svg>')}
 
 function newPic(){
   stopTimerAndMic();
-  const seed=Math.random().toString(36).slice(2,9),id=++picId;
-  const p=$('#pic');
-  $('#srcn').textContent='Caricamento immagine in corso...';
-  $('#txt').value='';
+  const id = ++picId;
+  const p = $('#pic');
+  $('#txt').value = '';
   $('#res').classList.add('hidden');
-  picUrl='';
+  picUrl = '';
 
-  const fallback=new Image();
-  fallback.alt='Illustrazione con persone';
-  fallback.onload=()=>{
-    if(id===picId && !picUrl){
-      p.textContent='';
-      p.appendChild(fallback);
-      $('#srcn').textContent='Illustrazione generata (pronta).';
-    }
-  };
-  fallback.src=scene();
+  p.innerHTML = 'Caricamento foto dal web...';
+  $('#srcn').textContent = 'Connessione a Picsum Photos in corso...';
 
-  const photo=new Image();
-  photo.alt='Foto di persone che svolgono attività';
-  photo.crossOrigin='anonymous';
-  photo.onload=()=>{
-    if(id!==picId)return;
-    p.textContent='';
+  const photo = new Image();
+  photo.alt = 'Foto reale da descrivere';
+  photo.crossOrigin = 'anonymous';
+  
+  photo.onload = () => {
+    if(id !== picId) return;
+    p.innerHTML = '';
     p.appendChild(photo);
-    picUrl=photo.src;
-    $('#srcn').textContent='Foto online di persone impegnate in attività.';
+    picUrl = photo.src;
+    $('#srcn').textContent = 'Foto reale dal web pronta per la descrizione.';
   };
-  photo.onerror=()=>{};
-  photo.src=`https://loremflickr.com/900/560/people,activity,working,playing?lock=${Math.floor(Math.random()*1000)}`;
+  
+  photo.onerror = () => {
+    if(id !== picId) return;
+    p.innerHTML = '<span style="padding:20px;text-align:center">Impossibile caricare la foto dal web. Controlla la connessione.</span>';
+    $('#srcn').textContent = 'Errore di caricamento.';
+  };
+
+  // Endpoint Picsum Photos ultra-stabile per foto casuali di alta qualità
+  photo.src = `https://picsum.photos/900/560?random=${Math.floor(Math.random() * 100000)}`;
 }
 
 /* ---------- GESTIONE VOCALE E CRONOMETRO ---------- */
@@ -474,8 +454,10 @@ function stopTimerAndMic(){
   live = false;
   secondsElapsed = 0;
   const micBtn = $('#mic');
-  if(micBtn) micBtn.innerHTML = '🎤 Parla <span id="timer" style="margin-left:6px;font-variant-numeric:tabular-nums"></span>';
-  micBtn.classList.remove('live');
+  if(micBtn) {
+    micBtn.innerHTML = '🎤 Parla <span id="timer" style="margin-left:6px;font-variant-numeric:tabular-nums"></span>';
+    micBtn.classList.remove('live');
+  }
 }
 
 document.getElementById('mic').onclick = () => {
