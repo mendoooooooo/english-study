@@ -209,7 +209,10 @@ function go(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));
   scrollTo(0,0);
   if(id==='review') buildReview();
-  if(id!=='describe') stopTimerAndMic(); // Pulisce cronometro e microfono se esci dalla sezione pratica
+  if(id!=='describe') {
+    stopTimerAndMic();
+    $('#translator').classList.add('hidden');
+  }
 }
 function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';speechSynthesis.speak(u)}catch(e){}}
 
@@ -379,7 +382,7 @@ function newQuiz(){
   $('#qs').textContent='Scegli una risposta per ogni domanda, poi premi Verifica.';
   $('#quiz').innerHTML=qset.map((q,i)=>`<div class="q"><p>${i+1}. ${q.q}</p>${q.o.map((o,j)=>`<button class="opt" data-i="${i}" data-j="${j}">${o.t}</button>`).join('')}</div>`).join('')+'<div class="row"><button class="btn" id="qv">Verifica risposte</button></div><div id="qr"></div>'}
 function verifyQuiz(){
-  qlock=true;let sc=0;const ok=[],ko[];
+  qlock=true;let sc=0;const ok=[],ko=[];
   qset.forEach((q,i)=>{
     const btns=$('#quiz').querySelectorAll(`.opt[data-i="${i}"]`),good=q.o.findIndex(o=>o.c);
     btns.forEach(x=>x.classList.remove('sel'));
@@ -422,7 +425,7 @@ function scene(){
   return 'data:image/svg+xml;utf8,'+encodeURIComponent(s+'</svg>')}
 
 function newPic(){
-  stopTimerAndMic(); // Resetta il cronometro quando cambi immagine
+  stopTimerAndMic();
   const seed=Math.random().toString(36).slice(2,9),id=++picId;
   const p=$('#pic');
   $('#srcn').textContent='Caricamento foto dal web in corso...';
@@ -488,7 +491,6 @@ $('#mic').onclick=()=>{
     return;
   }
 
-  // Avvio microfono e cronometro
   rec=new SR();rec.lang='en-GB';rec.continuous=true;rec.interimResults=true;
   const base=$('#txt').value?$('#txt').value.trim()+' ':'';let fin='';
   rec.onresult=e=>{let it='';for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;e.results[i].isFinal?fin+=t+' ':it+=t}$('#txt').value=base+fin+it};
@@ -598,8 +600,9 @@ $('#translateBtn').onclick=translateWord;
 $('#wordInput').addEventListener('keydown',e=>{if(e.key==='Enter')translateWord()});
 
 $('#cp').onclick=()=>{
-  const m=`I'm preparing for the B2 First speaking exam. Please check my picture description (who/what/where, emotions, present continuous, uncertainty phrases) and suggest improvements.\n${picUrl?'Image: '+picUrl+'\n':''}\nMy description:\n${$('#txt').value}`;
+  const m=`I'm preparing for the B2 First speaking exam. Please check my picture description (who/what/where, emotions, present continuous, uncertainty phrases) and suggest improvements.\n${picUrl?'Image: '+picUrl+'\n':''}\nMy description:\n${$('#txt আহমেদ').value || $('#txt').value}`;
   navigator.clipboard.writeText(m).then(()=>{$('#cp').textContent='Copiato!';setTimeout(()=>$('#cp').textContent='Copia per una IA',1800)}).catch(()=>prompt('Copia questo testo:',m))};
 </script>
 </body>
 </html>
+```[cite: 1]
