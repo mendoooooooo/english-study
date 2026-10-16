@@ -189,7 +189,7 @@ details{margin-top:14px;background:var(--card);border:1px solid var(--line);bord
     <button class="btn ghost" id="translateOpen">🌐 Traduci parola</button>
   </div>
   
-  <!-- Scheda Traduttore Interna con Fallback Automatico -->
+  <!-- Scheda Traduttore Interna con Fallback su Google Translate -->
   <div class="card hidden" id="translator" style="margin-top:18px;text-align:left;padding:22px">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
       <h3 style="font-size:1.35rem;margin:0">Traduttore Rapido</h3>
@@ -578,7 +578,7 @@ function evaluate(){
 
 $('#ok').addEventListener('click', evaluate);
 
-/* ---------- TRADUZIONE CON FALLBACK AUTOMATICO SU GOOGLE TRANSLATE ---------- */
+/* ---------- TRADUZIONE CON DOPPIO LIVELLO E FALLBACK SICURO ---------- */
 $('#translateOpen').onclick=()=>{
   $('#translator').classList.remove('hidden');
   $('#translationResult').classList.add('hidden');
@@ -605,8 +605,9 @@ async function translateWordInline(){
     const data = await response.json();
     let translated = data?.responseData?.translatedText;
 
-    if(!translated || data.responseStatus !== 200 || /MYMEMORY WARNING/i.test(translated)){
-      throw new Error('Servizio non disponibile');
+    // Se la risposta è vuota o contiene messaggi di errore/warning del server gratuito, forza il fallback
+    if(!translated || data.responseStatus !== 200 || /WARNING|QUOTA|MYMEMORY|xxeprobe/i.test(translated)){
+      throw new Error('Servizio temporaneamente occupato');
     }
 
     // Pulizia da simboli o ripetizioni
@@ -618,15 +619,13 @@ async function translateWordInline(){
 
     resBox.className='fb ok';
     resBox.innerHTML=`<b>Traduzione in inglese:</b><div class="ans">${translated}</div><button class="btn ghost" id="listenTranslation" style="margin-top:8px">🔊 Ascolta</button>`;
-    $('#listenTranslation', resBox)?.addEventListener('click', () => speak(translated));
-    // Semplificazione ascolto
     const btnListen = resBox.querySelector('#listenTranslation');
     if(btnListen) btnListen.onclick = () => speak(translated);
 
   } catch(err) {
-    // FALLBACK AUTOMATICO: se l'API interna fallisce, apre Google Translate in un'altra scheda con la frase precompilata
+    // FALLBACK AUTOMATICO: se il server interno fallisce o va in sovraccarico, apre Google Translate con la frase già inserita
     resBox.className='fb no';
-    resBox.innerHTML=`<b>Apertura di Google Translate in corso…</b><p class="lead" style="margin:6px 0">Ti stiamo reindirizzando alla pagina ufficiale con la traduzione pronta.</p>`;
+    resBox.innerHTML=`<b>Apertura di Google Translate…</b><p class="lead" style="margin:6px 0">Ti stiamo reindirizzando alla pagina ufficiale con la traduzione pronta.</p>`;
     
     const gUrl = `https://translate.google.com/?sl=it&tl=en&text=${encodeURIComponent(word)}&op=translate`;
     window.open(gUrl, '_blank');
