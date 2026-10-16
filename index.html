@@ -186,18 +186,19 @@ details{margin-top:14px;background:var(--card);border:1px solid var(--line);bord
     <button class="btn rec" id="mic">🎤 Parla <span id="timer" style="margin-left:6px;font-variant-numeric:tabular-nums"></span></button>
     <button class="btn" id="ok">✓ Valuta con IA</button>
     <button class="btn ghost" id="cp">Copia per una IA</button>
-    <button class="btn ghost" id="translateOpen">🌐 Google Translate</button>
+    <button class="btn ghost" id="translateOpen">🌐 Traduci parola</button>
   </div>
   
-  <!-- Scheda Traduttore Integrata con pulsante X per chiudere -->
+  <!-- Scheda Traduttore Interna (senza aprire nuove pagine) -->
   <div class="card hidden" id="translator" style="margin-top:18px;text-align:left;padding:22px">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-      <h3 style="font-size:1.35rem;margin:0">Google Translate</h3>
+      <h3 style="font-size:1.35rem;margin:0">Traduttore rapido</h3>
       <button class="btn ghost" id="translateClose" aria-label="Chiudi traduttore" style="padding:6px 12px;border-radius:50%">✕</button>
     </div>
-    <p class="lead" style="margin-top:8px">Scrivi la parola o la frase in italiano da cercare su Google Translate:</p>
+    <p class="lead" style="margin-top:8px">Scrivi una parola o frase in italiano:</p>
     <input type="text" id="wordInput" placeholder="Es. montagna, passeggiare…" autocomplete="off">
-    <div class="row"><button class="btn" id="translateBtn">Apri su Google Translate ↗</button></div>
+    <div class="row"><button class="btn" id="translateBtn">Traduci</button></div>
+    <div id="translationResult" class="fb hidden" aria-live="polite" style="margin-top:14px"></div>
   </div>
 
 <p class="lead" id="micn" style="font-size:.9rem;color:var(--bad);margin-top:10px"></p>
@@ -577,23 +578,56 @@ function evaluate(){
 
 $('#ok').addEventListener('click', evaluate);
 
-/* ---------- GOOGLE TRANSLATE CARD INTEGRATA ---------- */
+/* ---------- TRADUZIONE INTERNA IN LINEA ---------- */
 $('#translateOpen').onclick=()=>{
   $('#translator').classList.remove('hidden');
+  $('#translationResult').classList.add('hidden');
   $('#wordInput').value='';
   $('#wordInput').focus();
 };
 $('#translateClose').onclick=()=>$('#translator').classList.add('hidden');
 
-function openGoogleTranslate(){
-  const word=$('#wordInput').value.trim();
-  if(!word) return;
-  const gUrl = `https://translate.google.com/?sl=it&tl=en&text=${encodeURIComponent(word)}&op=translate`;
-  window.open(gUrl, '_blank');
+async function translateWordInline(){
+  const word = $('#wordInput').value.trim();
+  const resBox = $('#translationResult');
+  resBox.classList.remove('hidden');
+  if(!word){
+    resBox.className='fb no';
+    resBox.innerHTML='<b>Scrivi prima una parola o una frase.</b>';
+    return;
+  }
+  resBox.className='fb';
+  resBox.innerHTML='<b>Traduzione in corso…</b>';
+
+  try {
+    const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=it|en`);
+    if(!response.ok) throw new Error('Errore di connessione');
+    const data = await response.json();
+    let translated = data?.responseData?.translatedText;
+
+    if(!translated || data.responseStatus !== 200 || /MYMEMORY WARNING/i.test(translated)){
+      throw new Error('Servizio non disponibile');
+    }
+
+    // Pulizia rigorosa da punti interrogativi o ripetizioni doppie
+    translated = translated.replace(/[?!]/g, '').trim();
+    const parts = translated.split(/\s+/);
+    if(parts.length === 2 && parts[0].toLowerCase() === parts[1].toLowerCase()) {
+      translated = parts[0];
+    }
+
+    resBox.className='fb ok';
+    resBox.innerHTML=`<b>Traduzione in inglese:</b><div class="ans">${translated}</div><button class="btn ghost" id="listenTranslation" style="margin-top:8px">🔊 Ascolta</button>`;
+    $('#listenTranslation').onclick = () => speak(translated);
+
+  } catch(err) {
+    resBox.className='fb no';
+    resBox.innerHTML=`<b>Traduzione non riuscita.</b><p class="lead" style="margin:6px 0">Verifica la connessione a internet.</p>`;
+  }
 }
 
-$('#translateBtn').onclick = openGoogleTranslate;
-$('#wordInput').addEventListener('keydown', e => { if(e.key === 'Enter') openGoogleTranslate(); });
+$('#translateBtn').onclick = translateWordInline;
+$('#wordInput').addEventListener('keydown', e => { if(e.key === 'Enter') translateWordInline(); });
 
 $('#cp').onclick=()=>{
   const m=`I'm preparing for the B2 First speaking exam. Please check my picture description (who/what/where, emotions, present continuous, uncertainty phrases) and suggest improvements.\n${picUrl?'Image: '+picUrl+'\n':''}\nMy description:\n${$('#txt').value}`;
