@@ -428,17 +428,24 @@ function newPic(){
   stopTimerAndMic();
   const seed=Math.random().toString(36).slice(2,9),id=++picId;
   const p=$('#pic');
-  $('#srcn').textContent='Caricamento foto dal web in corso...';
+  $('#srcn').textContent='Caricamento immagine in corso...';
   $('#txt').value='';
   $('#res').classList.add('hidden');
   picUrl='';
 
+  // Carichiamo subito l'illustrazione locale per non lasciare mai lo schermo vuoto
   const fallback=new Image();
   fallback.alt='Illustrazione con persone';
-  fallback.onload=()=>{if(id===picId && !picUrl){p.textContent='';p.appendChild(fallback)}};
-  p.textContent='Caricamento immagine…';
+  fallback.onload=()=>{
+    if(id===picId && !picUrl){
+      p.textContent='';
+      p.appendChild(fallback);
+      $('#srcn').textContent='Illustrazione generata (modalità pronta).';
+    }
+  };
   fallback.src=scene();
 
+  // Tentativo di caricare una foto dal web in parallelo
   const photo=new Image();
   photo.alt='Foto di persone che svolgono attività';
   photo.crossOrigin='anonymous';
@@ -450,72 +457,98 @@ function newPic(){
     $('#srcn').textContent='Foto online di persone impegnate in attività.';
   };
   photo.onerror=()=>{
-    if(id!==picId)return;
-    p.textContent='';
-    p.appendChild(fallback);
-    $('#srcn').textContent='Illustrazione generata (modalità offline/fallback).';
+    // Se fallisce l'online, resta la fallback SVG senza bloccare nulla
   };
   photo.src=`https://loremflickr.com/900/560/people,activity,working,playing?lock=${Math.floor(Math.random()*1000)}`;
 }
 
 /* ---------- GESTIONE VOCALE E CRONOMETRO ---------- */
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-let rec=null,live=false,timerInterval=null,secondsElapsed=0;
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, live = false, timerInterval = null, secondsElapsed = 0;
 
 function formatTime(sec){
-  const m=Math.floor(sec/60);
-  const s=sec%60;
-  return `(${m}:${s<10?'0':''}${s})`;
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `(${m}:${s < 10 ? '0' : ''}${s})`;
 }
 
 function stopTimerAndMic(){
   if(live && rec){try{rec.stop();}catch(e){}}
   if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
-  live=false;
-  secondsElapsed=0;
-  $('#timer').textContent='';
+  live = false;
+  secondsElapsed = 0;
+  $('#timer').textContent = '';
   $('#mic').classList.remove('live');
-  $('#mic').textContent='🎤 Parla ';
+  $('#mic').textContent = '🎤 Parla ';
   $('#mic').appendChild($('#timer'));
 }
 
-$('#mic').onclick=()=>{
-  if(!window.isSecureContext && location.hostname!=='localhost' && location.hostname!=='127.0.0.1'){
-    $('#micn').textContent='Il microfono richiede una pagina sicura HTTPS o localhost.';
+$('#mic').onclick = () => {
+  if(!window.isSecureContext && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1'){
+    $('#micn').textContent = 'Il microfono richiede una pagina sicura HTTPS o localhost.';
     return;
   }
-  if(!SR){$('#micn').textContent='Il riconoscimento vocale non è disponibile in questo browser. Usa Google Chrome.';return}
+  if(!SR){
+    $('#micn').textContent = 'Il riconoscimento vocale non è disponibile in questo browser. Usa Google Chrome.';
+    return;
+  }
   
   if(live){
     stopTimerAndMic();
     return;
   }
 
-  rec=new SR();rec.lang='en-GB';rec.continuous=true;rec.interimResults=true;
-  const base=$('#txt').value?$('#txt').value.trim()+' ':'';let fin='';
-  rec.onresult=e=>{let it='';for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;e.results[i].isFinal?fin+=t+' ':it+=t}$('#txt').value=base+fin+it};
-  rec.onend=()=>{stopTimerAndMic();};
-  rec.onerror=e=>{const m={'not-allowed':'Microfono bloccato: consenti l\'accesso.','no-speech':'Non ti sento: riprova.','network':'Serve la connessione internet.'};$('#micn').textContent=m[e.error]||('Errore microfono: '+e.error);stopTimerAndMic();};
+  rec = new SR();
+  rec.lang = 'en-GB';
+  rec.continuous = true;
+  rec.interimResults = true;
   
-  $('#micn').textContent='';
+  const base = $('#txt').value ? $('#txt').value.trim() + ' ' : '';
+  let fin = '';
+
+  rec.onresult = e => {
+    let it = '';
+    for(let i = e.resultIndex; i < e.results.length; i++){
+      const t = e.results[i][0].transcript;
+      if(e.results[i].isFinal) fin += t + ' ';
+      else it += t;
+    }
+    $('#txt').value = base + fin + it;
+  };
+
+  rec.onend = () => {
+    stopTimerAndMic();
+  };
+
+  rec.onerror = e => {
+    const m = {
+      'not-allowed': 'Microfono bloccato: consenti l\'accesso nelle impostazioni del browser.',
+      'no-speech': 'Non ho sentito alcun audio: avvicinati al microfono e riprova.',
+      'network': 'Errore di rete durante la trascrizione.'
+    };
+    $('#micn').textContent = m[e.error] || ('Errore microfono: ' + e.error);
+    stopTimerAndMic();
+  };
+  
+  $('#micn').textContent = '';
   try{
     rec.start();
   }catch(x){
-    $('#micn').textContent='Impossibile avviare il microfono.';
+    $('#micn').textContent = 'Impossibile avviare il microfono.';
     return;
   }
 
-  live=true;
+  live = true;
   $('#mic').classList.add('live');
-  $('#mic').textContent='⏹ Stop ';
+  $('#mic').textContent = '⏹ Stop ';
   $('#mic').appendChild($('#timer'));
 
-  secondsElapsed=0;
-  $('#timer').textContent=formatTime(secondsElapsed);
-  timerInterval=setInterval(()=>{
+  secondsElapsed = 0;
+  $('#timer').textContent = formatTime(secondsElapsed);
+  timerInterval = setInterval(() => {
     secondsElapsed++;
-    $('#timer').textContent=formatTime(secondsElapsed);
-  },1000);
+    $('#timer').textContent = formatTime(secondsElapsed);
+  }, 1000);
 };
 
 const CH=[
@@ -600,9 +633,8 @@ $('#translateBtn').onclick=translateWord;
 $('#wordInput').addEventListener('keydown',e=>{if(e.key==='Enter')translateWord()});
 
 $('#cp').onclick=()=>{
-  const m=`I'm preparing for the B2 First speaking exam. Please check my picture description (who/what/where, emotions, present continuous, uncertainty phrases) and suggest improvements.\n${picUrl?'Image: '+picUrl+'\n':''}\nMy description:\n${$('#txt আহমেদ').value || $('#txt').value}`;
+  const m=`I'm preparing for the B2 First speaking exam. Please check my picture description (who/what/where, emotions, present continuous, uncertainty phrases) and suggest improvements.\n${picUrl?'Image: '+picUrl+'\n':''}\nMy description:\n${$('#txt').value}`;
   navigator.clipboard.writeText(m).then(()=>{$('#cp').textContent='Copiato!';setTimeout(()=>$('#cp').textContent='Copia per una IA',1800)}).catch(()=>prompt('Copia questo testo:',m))};
 </script>
 </body>
 </html>
-```[cite: 1]
