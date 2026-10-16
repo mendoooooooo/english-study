@@ -76,8 +76,8 @@ textarea{min-height:170px;resize:vertical;font-size:1rem}
 .opt:hover{border-color:var(--gold)}
 .opt.right{background:#0f3a2c;border-color:var(--ok)}.opt.wrong{background:#3b1626;border-color:var(--bad)}
 /* describe */
-.pic{background:var(--bg2);border-radius:24px;overflow:hidden;border:1px solid var(--line);aspect-ratio:900/560;display:grid;place-items:center;color:var(--mute)}
-.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.pic{background:var(--bg2);border-radius:24px;overflow:hidden;border:1px solid var(--line);min-height:200px;display:grid;place-items:center;color:var(--mute);text-align:center;padding:0}
+.pic img{width:100%;height:auto;max-height:75dvh;object-fit:contain;display:block}
 .chk{list-style:none;padding:0;margin-top:12px;display:grid;gap:8px}
 .chk li{padding:12px 16px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
 .chk li.y{border-color:#1f7a5c}.chk li.n{border-color:#8a2f4b}
@@ -471,7 +471,8 @@ const PICS=[['xs0_4EN7osM','Una coppia che cucina insieme in cucina'],['wFoo0y1H
 ['iBCDIguykAs','Una bambina che si dondola su un\'altalena'],['-o1yUD1u_8E','Bambini che saltano e giocano'],
 ['BjRByKbKqdo','Un gruppo di persone che fa escursionismo'],['jokec_3IzHU','Escursionisti che salgono una collina'],['MwCIIozsbmQ','Escursionisti su un sentiero roccioso'],
 ['1Nm3DpE8g-o','Una coppia che balla in cucina'],['Z1_9CbuR46g','Una coppia che balla il tango'],['9kqqVCgMdBA','Coppie che ballano in una sala'],
-['8-56D4-e2vo','Una coppia che prepara il cibo in cucina'],['N5jZksBBIaM','Ragazzi che giocano a calcio'],['LSnNnxRyssI','Un uomo che corre di giorno'],['1-nuy7fD3fw','Un corridore che scatta su una pista'],['PxnZHqLJ0lQ','Una persona con lo zaino che sale una collina rocciosa'],['AGsii9KWbDE','Una donna che balla circondata da persone'],['_v8C6BlpBzY','Un gruppo di ballerini hip hop'],['-gCxJpPORk4','Un uomo e una donna che ballano'],['cas-O7ykPVg','Persone che ballano e sorridono al tramonto'],['o20S0-tsnro','Coppie che ballano su un pavimento lucido'],['Dg8WzlOE1as','Studenti che studiano insieme a un lungo tavolo'],['l-M9fs0pNuQ','Persone che fanno la spesa in un mercato all\'aperto'],['8Tp2WW-WRIw','Persone che mangiano durante un picnic']];
+['8-56D4-e2vo','Una coppia che prepara il cibo in cucina'],['N5jZksBBIaM','Ragazzi che giocano a calcio'],['LSnNnxRyssI','Un uomo che corre di giorno'],['1-nuy7fD3fw','Un corridore che scatta su una pista'],['PxnZHqLJ0lQ','Una persona con lo zaino che sale una collina rocciosa'],['AGsii9KWbDE','Una donna che balla circondata da persone'],['_v8C6BlpBzY','Un gruppo di ballerini hip hop'],['-gCxJpPORk4','Un uomo e una donna che ballano'],['cas-O7ykPVg','Persone che ballano e sorridono al tramonto'],['o20S0-tsnro','Coppie che ballano su un pavimento lucido'],['Dg8WzlOE1as','Studenti che studiano insieme a un lungo tavolo'],['l-M9fs0pNuQ','Persone che fanno la spesa in un mercato all\'aperto'],['8Tp2WW-WRIw','Persone che mangiano durante un picnic'],
+['071AcrOX8fA','Una donna che porta a spasso il cane sul marciapiede'],['m2OytUT2qxY','Una persona che porta a spasso il cane sulla spiaggia'],['5ai6kpW4NOw','Un gruppo di persone che fa flessioni in palestra'],['IYLLF511aOY','Una donna che solleva pesi in palestra'],['7eBHTcyVT4A','Un uomo che usa un macchinario in palestra'],['z9VbZ4tM3Zc','Una donna che si allena in palestra'],['8c0ndhIXDzQ','Studenti che ascoltano una lezione e prendono appunti'],['RDBb3JUdOnc','Studenti che prendono appunti in un\'aula'],['nrE0LK_qN7E','Un professore che tiene lezione agli studenti']];
 let picUrl='',picId=0,lastP=-1;
 function newPic(){
   stopMic();const id=++picId,p=$('#pic'),tried=new Set();
