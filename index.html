@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>English Studio · B2 First</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,800;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#15122b;--bg2:#1f1b40;--card:#2a2557;--ivory:#f6f1ff;--mute:#a9a3cf;--gold:#f2c66d;--rose:#ff8fab;--ok:#6ee7b7;--bad:#ff7a90;--line:#3b3577;--r:22px}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Outfit,system-ui,sans-serif;color:var(--ivory);min-height:100vh;background:radial-gradient(900px 500px at 85% -10%,#3a2f8a55,transparent),radial-gradient(700px 500px at -10% 110%,#ff8fab22,transparent),var(--bg);line-height:1.55}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.15}
+button{font:inherit;cursor:pointer;border:0;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 60px}
+.view{display:none}.view.on{display:block}
+.top{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.back{background:var(--card);border:1px solid var(--line);padding:9px 16px;border-radius:99px;color:var(--mute);transition:.2s}
+.back:hover{color:var(--ivory);border-color:var(--gold)}
+.top h2{font-size:1.5rem}
+/* home */
+.hero{padding:56px 0 34px}
+.hero h1{font-size:clamp(2.6rem,9vw,5rem);font-weight:800;letter-spacing:-.02em}
+.hero h1 em{font-style:italic;font-weight:400;color:var(--gold)}
+.hero p{color:var(--mute);max-width:46ch;margin-top:16px;font-size:1.1rem}
+.tiles{display:grid;gap:18px;grid-template-columns:1fr 1fr}
+@media(max-width:640px){.tiles{grid-template-columns:1fr}}
+.tile{text-align:left;padding:32px 28px;border-radius:var(--r);background:linear-gradient(160deg,var(--card),var(--bg2));border:1px solid var(--line);min-height:220px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .25s,border-color .25s}
+.tile:hover{transform:translateY(-4px);border-color:var(--gold)}
+.tile .ic{font-size:2.2rem}
+.tile h3{font-size:1.6rem;margin:14px 0 6px}
+.tile span{color:var(--mute);font-size:.95rem}
+.tile.alt{background:linear-gradient(160deg,#4b2a62,var(--bg2))}
+.sub{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+@media(max-width:640px){.sub{grid-template-columns:1fr}}
+/* flashcards */
+.bar{height:6px;background:var(--bg2);border-radius:9px;overflow:hidden;margin-bottom:10px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width .4s}
+.meta{display:flex;justify-content:space-between;color:var(--mute);font-size:.9rem;margin-bottom:18px}
+.card{background:linear-gradient(160deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:28px;padding:40px 28px;text-align:center;box-shadow:0 30px 60px -30px #000a}
+.card small{color:var(--mute)}
+.card h3{font-size:clamp(1.8rem,6vw,2.6rem);margin:12px 0}
+.hint{color:var(--gold);letter-spacing:.1em;min-height:1.6em;font-size:1.05rem}
+input[type=text],textarea{width:100%;background:var(--bg);border:1.5px solid var(--line);border-radius:16px;color:var(--ivory);font:inherit;padding:14px 18px;font-size:1.1rem;margin-top:20px;transition:border .2s}
+input[type=text]:focus,textarea:focus{outline:0;border-color:var(--gold)}
+textarea{min-height:170px;resize:vertical;font-size:1rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{padding:13px 22px;border-radius:14px;background:var(--gold);color:#2a1d00;font-weight:600;transition:.2s}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn.ghost{background:var(--card);color:var(--ivory);border:1px solid var(--line)}
+.btn.rec{background:var(--rose);color:#3b0016}
+.btn.rec.live{animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px #ff8fab33}}
+.fb{margin-top:20px;padding:18px 20px;border-radius:16px;text-align:left;border:1px solid}
+.fb.ok{background:#0f3a2c;border-color:#1f7a5c}.fb.no{background:#3b1626;border-color:#8a2f4b}
+.fb b{font-size:1.1rem}.fb .ans{font-family:Fraunces,serif;font-size:1.5rem;color:var(--ok);margin:6px 0}
+.fb.no .ans{color:var(--gold)}
+.hidden{display:none!important}
+/* review */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.tab{padding:10px 18px;border-radius:99px;background:var(--card);border:1px solid var(--line);color:var(--mute)}
+.tab.on{background:var(--gold);color:#2a1d00;border-color:var(--gold);font-weight:600}
+.lead{color:var(--mute);margin-bottom:16px}
+.ph{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 20px;margin-bottom:12px;cursor:pointer;transition:.2s}
+.ph:hover{border-color:var(--rose)}
+.ph .h{display:flex;justify-content:space-between;gap:10px;align-items:center;font-family:Fraunces,serif;font-size:1.15rem}
+.ph .ex{display:none;margin-top:10px;color:var(--mute);border-left:3px solid var(--gold);padding-left:12px}
+.ph.open .ex{display:block}
+.spk{background:var(--bg2);border-radius:50%;width:38px;height:38px;flex:none}
+.quiz{background:linear-gradient(160deg,#4b2a62,var(--bg2));border-radius:24px;padding:26px;border:1px solid var(--line)}
+.quiz h3{font-size:1.4rem;margin-bottom:6px}
+.q p{font-size:1.2rem;margin:16px 0 10px;font-family:Fraunces,serif}
+.opt{padding:10px 18px;border-radius:12px;background:var(--bg);border:1px solid var(--line);margin:0 8px 8px 0}
+.opt:hover{border-color:var(--gold)}
+.opt.right{background:#0f3a2c;border-color:var(--ok)}.opt.wrong{background:#3b1626;border-color:var(--bad)}
+/* describe */
+.pic{background:var(--bg2);border-radius:24px;overflow:hidden;border:1px solid var(--line);aspect-ratio:900/560;display:grid;place-items:center;color:var(--mute)}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.chk{list-style:none;padding:0;margin-top:12px;display:grid;gap:8px}
+.chk li{padding:12px 16px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
+.chk li.y{border-color:#1f7a5c}.chk li.n{border-color:#8a2f4b}
+.chk em{color:var(--gold);font-style:normal}
+.score{font-family:Fraunces,serif;font-size:2.4rem;color:var(--gold)}
+.opt.sel{border-color:var(--gold);background:#3a3470}
+html,body{overflow-x:hidden}
+body{min-height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+h2,h3,.hint,.fb .ans,.ph .h span{overflow-wrap:anywhere}
+.pic img{background:var(--bg2)}
+@media(max-width:640px){
+.wrap{padding:16px 14px 44px}
+.hero{padding:26px 0 20px}
+.hero p{font-size:1rem}
+.tile{min-height:0;padding:22px 20px;gap:12px}
+.tile h3{font-size:1.4rem;margin:8px 0 4px}
+.top{margin-bottom:18px;gap:10px}.top h2{font-size:1.25rem}
+.card{padding:26px 16px;border-radius:22px}
+.row .btn{flex:1 1 calc(50% - 10px);padding:13px 10px}
+#nx,#ok,#mic,#qv,#qn{flex-basis:100%}
+.tab{padding:8px 14px;font-size:.92rem}
+.ph{padding:14px}.ph .h{font-size:1.02rem}
+.quiz{padding:18px 14px}.q p{font-size:1.08rem}
+.opt{padding:12px 16px}
+textarea{min-height:140px}
+.pic{border-radius:18px}
+}
+details{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px}summary{cursor:pointer;color:var(--gold)}details p{color:var(--mute);font-size:.9rem;margin-top:8px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section class="view on" id="home">
+  <div class="hero">
+    <h1>English<br><em>Studio</em></h1>
+    <p>Vocabolario, strutture e pratica orale per il B2 First. Scegli da dove partire.</p>
+  </div>
+  <div class="tiles">
+    <button class="tile" onclick="go('cards')"><div><div class="ic">🃏</div><h3>Flashcard</h3></div><span>Traduci dall'italiano all'inglese: vocaboli su relazioni e vita.</span></button>
+    <button class="tile alt" onclick="go('menu')"><div><div class="ic">🖼️</div><h3>Describing a picture</h3></div><span>Ripassa le strutture, poi allenati a descrivere immagini.</span></button>
+  </div>
+</section>
+
+<section class="view" id="menu">
+  <div class="top"><button class="back" onclick="go('home')">← Home</button><h2>Describing a picture</h2></div>
+  <div class="sub">
+    <button class="tile" onclick="go('review')"><div><div class="ic">📖</div><h3>Ripasso</h3></div><span>Frasi utili: chi, cosa, dove. Con esempi, audio e quiz.</span></button>
+    <button class="tile alt" onclick="go('describe');newPic()"><div><div class="ic">🎙️</div><h3>Pratica</h3></div><span>Un'immagine a caso: descrivila scrivendo o parlando e ricevi un feedback.</span></button>
+  </div>
+</section>
+
+<section class="view" id="cards">
+  <div class="top"><button class="back" onclick="go('home')">← Home</button><h2>Flashcard</h2></div>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="meta"><span id="pos"></span><span id="sc"></span></div>
+  <div class="card" id="card">
+    <small>Traduci in inglese</small>
+    <h3 id="front"></h3>
+    <div class="hint" id="hint"></div>
+    <div id="inp">
+      <input type="text" id="ans" placeholder="Scrivi la traduzione…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="row" style="justify-content:center">
+        <button class="btn" id="chk">Verifica</button>
+        <button class="btn ghost" id="hb">💡 Indizio</button>
+        <button class="btn ghost" id="skip">Non lo so</button>
+      </div>
+    </div>
+    <div class="fb hidden" id="fb"><b id="fh"></b><div class="ans" id="fa"></div>
+      <div class="row"><button class="btn" id="nx">Avanti</button><button class="btn ghost" id="say">🔊 Ascolta</button></div></div>
+  </div>
+  <div class="row" style="justify-content:center"><button class="btn ghost" onclick="startCards()">↺ Ricomincia (mescola)</button></div>
+</section>
+
+<section class="view" id="review">
+  <div class="top"><button class="back" onclick="go('menu')">← Indietro</button><h2>Ripasso</h2></div>
+  <div class="tabs" id="tabs"></div>
+  <p class="lead" id="lead"></p>
+  <div id="phr"></div>
+  <div class="quiz" style="margin-top:30px"><h3>Quiz veloce</h3><span class="lead" id="qs"></span><div id="quiz"></div></div>
+</section>
+
+<section class="view" id="describe">
+  <div class="top"><button class="back" onclick="go('menu')">← Indietro</button><h2>Descrivi l'immagine</h2></div>
+  <div class="pic" id="pic">Carico l'immagine…</div>
+  <p class="lead" id="srcn" style="font-size:.85rem;margin-top:8px"></p>
+  <div class="row"><button class="btn ghost" onclick="newPic()">🔀 Altra immagine</button></div>
+  <textarea id="txt" placeholder="Scrivi qui la tua descrizione in inglese, oppure premi il microfono e parla…"></textarea>
+  <div class="row">
+    <button class="btn rec" id="mic">🎤 Parla</button>
+    <button class="btn" id="ok">✓ Conferma e valuta</button>
+    <button class="btn ghost" id="cp">Copia per una IA</button>
+  </div>
+  <details><summary>🤖 Feedback con IA (confronta il testo con l'immagine)</summary>
+    <p>Inserisci una tua chiave API Anthropic (console.anthropic.com, a pagamento a consumo: pochi centesimi a valutazione). Resta salvata solo in questo browser. Funziona quando apri il file nel browser, non nell'anteprima di Claude.</p>
+    <input type="password" id="kin" placeholder="sk-ant-…" autocomplete="off" style="margin-top:10px">
+    <div class="row"><button class="btn ghost" id="ksave">Salva chiave</button></div>
+    <p id="kstat"></p></details>
+  <p class="lead" id="micn" style="font-size:.9rem;color:var(--bad);margin-top:10px"></p>
+  <div class="fb hidden" id="ai" style="background:var(--card);border-color:var(--gold)"></div>
+  <div class="fb hidden" id="res" style="background:var(--card);border-color:var(--line)"></div>
+</section>
+
+</div>
+<script>
+const $=s=>document.querySelector(s);
+function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));scrollTo(0,0);if(id==='cards')startCards();if(id==='review')buildReview()}
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';speechSynthesis.speak(u)}catch(e){}}
+
+/* ---------- FLASHCARDS ---------- */
+const RAW=`Appuntamento al buio|a blind date
+Amore a prima vista|love at first sight
+Essere attratti da qualcuno|to be attracted to somebody
+Abbordare qualcuno|to chat somebody up
+Scambiarsi occhiate|to exchange glances/to exchange looks
+Innamorarsi|to fall for somebody/to fall in love
+Flirtare|to flirt
+Fidanzato|fiancé/fiance
+Fidanzata|fiancée/fiancee
+Fidanzarsi ufficialmente|to get engaged
+Mazzo di fiori|bunch of flowers
+Conoscente|acquaintance
+Di buona compagnia|good company
+Collaborazione|partnership
+Condizionamento dal gruppo dei pari|peer pressure
+Socializzare con|to socialise with/to socialize with
+Antenato|ancestor
+Famiglia allargata|extended family
+Suocero|father-in-law
+Suocera|mother-in-law
+Genero|son-in-law
+Nuora|daughter-in-law
+Cognato|brother-in-law
+Cognata|sister-in-law
+Parenti stretti|immediate family
+Famiglia nucleare|nuclear family
+Parente|relative
+Fratello o sorella|sibling
+Patrigno|step-father/stepfather
+Matrigna|step-mother/stepmother
+Figliastro|step-son/stepson
+Figliastra|step-daughter/stepdaughter
+Fratellastro|step-brother/stepbrother
+Sorellastra|step-sister/stepsister
+Sposarsi|to get married
+Sposo|groom
+Sposa|bride
+Testimone dello sposo|best man
+Damigella d'onore principale|maid of honor/maid of honour
+Damigella|bridesmaid
+Paggetto|page boy
+Promesse di matrimonio|vows
+Luna di miele|honeymoon
+Ricevimento|reception
+Addio al celibato|stag night
+Addio al nubilato|hen night
+Il gran giorno|the big day
+Anniversario di nozze|wedding anniversary
+Cerimonia di nozze|wedding ceremony
+Invitati al matrimonio|wedding guests
+Vestiti eleganti|dressed up
+Vedovo|widower
+Vedova|widow
+Divorziare|to get divorced
+Fare una proposta di matrimonio|to propose
+Accasarsi / sistemarsi|to settle down
+Essere incinta|to be pregnant
+Gravidanza|pregnancy
+Battesimo|baptism
+Neonato (0-1 anni)|newborn baby/newborn
+Bimbo di 1-3 anni|toddler
+Partorire|to give birth
+Avere un bambino|to have a baby
+Mettere su famiglia|to start a family
+Allattamento al seno|breastfeeding/to breastfeed
+Latte artificiale nel biberon|formula milk in a bottle
+Ciuccio|pacifier/dummy
+Non poter vivere senza qualcuno|can't live without somebody/cannot live without somebody
+Fare affidamento su|to count on
+Andare d'accordo|to get on well/to hit it off
+Cominciare ad apprezzare qualcuno|to grow to like somebody/to get to like somebody
+Avere qualcosa in comune|to have something in common
+Fare compagnia a qualcuno|to keep somebody company
+Dare una mano|to lend a hand
+Frequentare|to mix with
+Trattare qualcuno con rispetto|to treat somebody with respect
+Fidarsi|to trust`.split('\n').map(l=>{const [it,en]=l.split('|');return{it,alts:en.split('/')}});
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’]/g,"'").replace(/\b(sb|sth|somebody|someone|something)\b/g,'').replace(/^to /,'').replace(/[^a-z' ]/g,' ').replace(/\s+/g,' ').trim();
+function lev(a,b){const d=[...Array(a.length+1)].map((_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return d[a.length][b.length]}
+let Q=[],cur=null,right=0,wrong=0,total=0;
+function startCards(){Q=RAW.map((c,i)=>i).sort(()=>Math.random()-.5);right=wrong=0;total=Q.length;nextC()}
+function nextC(){
+  if(!Q.length){$('#front').textContent='Fatto! 🎉';$('#hint').textContent='';$('#inp').classList.add('hidden');$('#fb').classList.add('hidden');$('#pos').textContent='Mazzo completato';$('#bar').style.width='100%';return}
+  cur=RAW[Q[0]];$('#front').textContent=cur.it;$('#hint').textContent='';$('#ans').value='';
+  $('#inp').classList.remove('hidden');$('#fb').classList.add('hidden');
+  $('#pos').textContent=`Restano ${Q.length} carte`;$('#sc').textContent=`✓ ${right}  ✗ ${wrong}`;
+  $('#bar').style.width=((total-Q.length)/total*100)+'%';$('#ans').focus()}
+function grade(skip){
+  const u=norm($('#ans').value);let ok=false,near=false;
+  if(!skip&&u)for(const a of cur.alts){const n=norm(a);if(n===u)ok=true;else if(n.length>5&&lev(n,u)<=1)near=true}
+  const good=ok||near,fb=$('#fb');
+  fb.className='fb '+(good?'ok':'no');
+  $('#fh').textContent=skip?'Ecco la risposta':ok?'✅ Esatto!':near?'✅ Quasi perfetto: controlla lo spelling':'❌ Non proprio';
+  $('#fa').textContent=cur.alts.join('   oppure   ');
+  $('#inp').classList.add('hidden');
+  if(good){right++;Q.shift()}else{wrong++;Q.push(Q.shift())}
+  $('#sc').textContent=`✓ ${right}  ✗ ${wrong}`}
+$('#chk').onclick=()=>grade(false);$('#skip').onclick=()=>grade(true);
+$('#nx').onclick=nextC;$('#say').onclick=()=>speak(cur.alts[0]);
+$('#hb').onclick=()=>{$('#hint').textContent=cur.alts[0].split(' ').map(w=>w[0]+'_'.repeat(w.length-1)).join('  ')};
+$('#ans').addEventListener('keydown',e=>{if(e.key==='Enter')grade(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('#cards').classList.contains('on')&&!$('#fb').classList.contains('hidden'))nextC()});
+
+/* ---------- REVIEW ---------- */
+const SEC={
+ who:{t:'1 · Chi? (WHO)',l:'Cosa c\'è nell\'immagine, com\'è fatta la gente e come si sente.',p:[
+  ['In the picture I can see …','In the picture I can see a family of five.'],
+  ['The central focus of the picture is …','The central focus of the picture is a couple holding hands.'],
+  ['There\'s … / There are …','There are two children sitting on the grass.'],
+  ['There isn\'t a … / There aren\'t any …','There aren\'t any cars in the street.'],
+  ['From the expressions on their faces, I can tell they are feeling …','From the expressions on their faces, I can tell they are feeling excited.'],
+  ['We can\'t really see their faces, but they must be feeling …','We can\'t really see their faces, but they must be feeling tired.'],
+  ['The boy/girl is smiling, so he/she must be feeling happy','The girl is grinning, so she must be feeling happy.'],
+  ['Persone: abiti, età, espressione, atteggiamento','He\'s about thirty, wearing a dark suit, and he looks relaxed.']]},
+ what:{t:'2 · Cosa? (WHAT)',l:'Cosa sta succedendo: usa il present continuous.',p:[
+  ['The man is …ing','The man is carrying a heavy bag.'],
+  ['The people are …ing','The people are waiting for the bus.'],
+  ['It\'s raining.','It\'s raining, so some people are holding umbrellas.']]},
+ where:{t:'3 · Dove? (WHERE)',l:'Posizione nell\'immagine e preposizioni di luogo.',p:[
+  ['At the top / bottom of the picture …','At the bottom of the picture there\'s a small dog.'],
+  ['In the foreground / background …','In the background there are some tall trees.'],
+  ['In the middle of the picture …','In the middle of the picture a woman is dancing.'],
+  ['On the left / right of the picture …','On the right of the picture there\'s a red car.'],
+  ['next to · in front of · behind · near · on top of · under','The cat is under the table, next to the sofa.']]},
+ unsure:{t:'!!! Non è chiaro',l:'Quando non sei sicuro di cosa vedi: non fermarti, ipotizza.',p:[
+  ['It looks like a …','It looks like a market.'],
+  ['It might be a …','It might be a wedding reception.'],
+  ['He could be …ing','He could be waiting for someone.'],
+  ['Maybe it\'s a …','Maybe it\'s a birthday party.']]}};
+const QZ=[['___ the background, there are some trees.','In','On','At'],['She is smiling, so she ___ be feeling happy.','must','does','makes'],['Look! The man ___ a coffee.','is drinking','drinks','drank'],['___ the top of the picture there\'s a clock.','At','In','On'],['I can\'t see clearly. It ___ a dog.','looks like','is looking','looks to'],['There ___ any people on the left.','aren\'t','isn\'t','not'],['The boy is standing ___ the girl.','next to','at','on'],['From their faces, I ___ they are excited.','can tell','am tell','can said'],['They ___ be brothers, but I\'m not sure.','might','would','are'],['The woman is sitting ___ front of the computer.','in','at','on'],['There ___ a bicycle behind the tree.','is','are','have'],['___ the foreground, a girl is playing with a ball.','In','At','To'],['Everyone is wearing a coat because it ___.','is snowing','snows','snowed'],['We can\'t really see their faces, but they ___ be feeling tired.','must','are','do'],['In the middle ___ the picture there is a fountain.','of','at','from'],['He ___ be waiting for someone. I\'m not sure.','could','is','does']];
+let revBuilt=false,qset=[],qsel=[],qlock=false;
+function buildReview(){
+  if(revBuilt)return;revBuilt=true;
+  $('#tabs').innerHTML=Object.entries(SEC).map(([k,s])=>`<button class="tab" data-k="${k}">${s.t}</button>`).join('');
+  $('#tabs').onclick=e=>{if(e.target.dataset.k)showSec(e.target.dataset.k)};
+  showSec('who');
+  $('#quiz').onclick=e=>{
+    const b=e.target.closest('.opt');
+    if(b&&!qlock){b.parentNode.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');qsel[+b.dataset.i]=+b.dataset.j;return}
+    if(e.target.id==='qv')verifyQuiz();
+    if(e.target.id==='qn')newQuiz()};
+  newQuiz()}
+function newQuiz(){
+  qlock=false;qsel=[];
+  qset=[...QZ].sort(()=>Math.random()-.5).slice(0,8).map(q=>{const o=q.slice(1).map((t,i)=>({t,c:i===0})).sort(()=>Math.random()-.5);return{q:q[0],o}});
+  $('#qs').textContent='Scegli una risposta per ogni domanda, poi premi Verifica.';
+  $('#quiz').innerHTML=qset.map((q,i)=>`<div class="q"><p>${i+1}. ${q.q}</p>${q.o.map((o,j)=>`<button class="opt" data-i="${i}" data-j="${j}">${o.t}</button>`).join('')}</div>`).join('')+'<div class="row"><button class="btn" id="qv">Verifica risposte</button></div><div id="qr"></div>'}
+function verifyQuiz(){
+  qlock=true;let sc=0;const ok=[],ko=[];
+  qset.forEach((q,i)=>{
+    const btns=$('#quiz').querySelectorAll(`.opt[data-i="${i}"]`),good=q.o.findIndex(o=>o.c);
+    btns.forEach(x=>x.classList.remove('sel'));
+    btns[good].classList.add('right');
+    if(qsel[i]===good){sc++;ok.push(i+1)}else{if(qsel[i]!==undefined)btns[qsel[i]].classList.add('wrong');ko.push(`${i+1}. ${q.q.replace('___','<b>'+q.o[good].t+'</b>')}`)}});
+  const voto=Math.round(sc/qset.length*100)/10;
+  $('#qv').classList.add('hidden');
+  $('#qs').textContent='';
+  $('#qr').innerHTML=`<div class="fb ${sc>=6?'ok':'no'}"><div class="score">${sc}/${qset.length}</div><b>Voto: ${voto}/10</b>
+  <p style="margin-top:10px">✅ Corrette: ${ok.length?ok.join(', '):'nessuna'}</p>
+  ${ko.length?`<p style="margin-top:8px">❌ Da rivedere:</p><ul style="padding-left:20px">${ko.map(x=>`<li>${x}</li>`).join('')}</ul>`:'<p style="margin-top:8px">Perfetto, nessun errore! 🎉</p>'}
+  <div class="row"><button class="btn" id="qn">Altre domande</button></div></div>`;
+  $('#qr').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function showSec(k){
+  const s=SEC[k];document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.k===k));
+  $('#lead').textContent=s.l;
+  $('#phr').innerHTML=s.p.map((p,i)=>`<div class="ph" data-i="${i}"><div class="h"><span>${p[0]}</span><button class="spk" data-s="${p[1].replace(/"/g,'')}" aria-label="Ascolta">🔊</button></div><div class="ex">${p[1]}</div></div>`).join('');
+  $('#phr').onclick=e=>{const sp=e.target.closest('.spk');if(sp){e.stopPropagation();speak(sp.dataset.s);return}const c=e.target.closest('.ph');if(c)c.classList.toggle('open')}}
+
+/* ---------- DESCRIBE ---------- */
+let picUrl='',picId=0;
+const SRC=[x=>`https://picsum.photos/seed/${x}/900/560`,x=>`https://loremflickr.com/900/560/people?lock=${parseInt(x,36)%9999}`];
+function scene(){
+  const R=(a,b)=>a+Math.random()*(b-a),P=a=>a[Math.floor(Math.random()*a.length)];
+  const sky=P([['#9ad1ff','#e8f6ff'],['#ffb88c','#ffe6c7'],['#a8b5ff','#f1e9ff'],['#7fd1c7','#eafff8']]);
+  const col=['#e4572e','#29335c','#f3a712','#4a7c59','#a846a0','#2e86ab','#f06c9b'];
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient></defs><rect width="900" height="560" fill="url(#g)"/>`;
+  s+=`<circle cx="${R(100,800)}" cy="${R(70,130)}" r="${R(40,60)}" fill="#fff6a8"/>`;
+  for(let i=0;i<2;i++){const x=R(60,700),y=R(60,160);s+=`<ellipse cx="${x}" cy="${y}" rx="70" ry="24" fill="#fff" opacity=".85"/><ellipse cx="${x+40}" cy="${y-14}" rx="45" ry="22" fill="#fff" opacity=".85"/>`}
+  s+='<path d="M0 360 Q200 290 420 350 T900 330 V560 H0Z" fill="#7bb274"/><rect y="430" width="900" height="130" fill="#5f9a5a"/>';
+  const tx=P([90,780]);s+=`<rect x="${tx}" y="250" width="26" height="170" fill="#7a4b2a"/><circle cx="${tx+13}" cy="230" r="80" fill="#2f7d4f"/>`;
+  if(Math.random()<.5)s+='<rect x="330" y="290" width="150" height="110" fill="#f2d7a7"/><path d="M315 292 L405 220 L495 292Z" fill="#b5483a"/><rect x="385" y="340" width="40" height="60" fill="#6b4226"/>';
+  const n=Math.floor(R(2,5));
+  for(let i=0;i<n;i++){const x=150+i*(600/n)+R(-20,20),y=R(430,490),k=R(.8,1.2),c=P(col),sm=Math.random()<.7;
+    s+=`<g transform="translate(${x} ${y}) scale(${k})"><path d="M-28 -105 L-48 -60 M28 -105 L48 -60" stroke="${c}" stroke-width="14" stroke-linecap="round"/><rect x="-30" y="-110" width="60" height="110" rx="26" fill="${c}"/><circle cx="0" cy="-140" r="28" fill="#f1c9a5"/><circle cx="-9" cy="-146" r="3" fill="#222"/><circle cx="9" cy="-146" r="3" fill="#222"/><path d="${sm?'M-12 -130 Q0 -118 12 -130':'M-12 -126 Q0 -134 12 -126'}" stroke="#222" stroke-width="3" fill="none"/></g>`}
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(s+'</svg>')}
+function newPic(){
+  const seed=Math.random().toString(36).slice(2,9),id=++picId;let k=0;
+  const p=$('#pic');p.textContent='Carico l\'immagine…';$('#srcn').textContent='';
+  $('#txt').value='';$('#res').classList.add('hidden');
+  const tryNext=()=>{
+    if(id!==picId)return;
+    const off=k>=SRC.length,im=new Image();im.alt='Immagine da descrivere';im.referrerPolicy='no-referrer';
+    const t=setTimeout(()=>{im.onload=im.onerror=null;k++;tryNext()},8000);
+    im.onload=()=>{clearTimeout(t);if(id!==picId)return;p.textContent='';p.appendChild(im);
+      picUrl=off?'':im.src;$('#srcn').textContent=off?'Non riesco a scaricare foto dal web (connessione o blocco del browser): ti mostro un\'illustrazione creata dall\'app.':''};
+    im.onerror=()=>{clearTimeout(t);k++;tryNext()};
+    im.src=off?scene():SRC[k](seed)};
+  tryNext()}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null,live=false;
+$('#mic').onclick=()=>{
+  if(!SR){$('#micn').textContent='Questo browser non supporta il riconoscimento vocale. Usa Chrome, Edge o Safari.';return}
+  if(live){rec.stop();return}
+  rec=new SR();rec.lang='en-GB';rec.continuous=true;rec.interimResults=true;
+  const base=$('#txt').value?$('#txt').value.trim()+' ':'';let fin='';
+  rec.onresult=e=>{let it='';for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;e.results[i].isFinal?fin+=t+' ':it+=t}$('#txt').value=base+fin+it};
+  rec.onend=()=>{live=false;$('#mic').classList.remove('live');$('#mic').textContent='🎤 Parla'};
+  rec.onerror=e=>{const m={'not-allowed':'Microfono bloccato: consenti l\'accesso al microfono per questa pagina. Nell\'anteprima di Claude non funziona: apri il file nel browser.','service-not-allowed':'Il browser non permette il riconoscimento vocale qui: apri il file in Chrome o Safari.','no-speech':'Non ti sento: avvicinati al microfono e riprova.','audio-capture':'Nessun microfono trovato.','network':'Serve la connessione internet per il riconoscimento vocale.'};$('#micn').textContent=m[e.error]||('Errore microfono: '+e.error);rec.onend()};
+  $('#micn').textContent='';try{rec.start()}catch(x){$('#micn').textContent='Impossibile avviare il microfono.';return}live=true;$('#mic').classList.add('live');$('#mic').textContent='⏹ Stop'};
+const CH=[
+ ['Chi c\'è nell\'immagine',/in the picture|i can see|there('s| is| are)|central focus|we can see/i,'In the picture I can see …  /  The central focus of the picture is …'],
+ ['Persone: abiti, età, aspetto',/wearing|dressed|years old|young|elderly|middle-aged|hair|\bold\b|tall|smart|casual/i,'He\'s wearing … / She looks about thirty / They\'re dressed up'],
+ ['Emozioni',/feeling|must be feeling|looks? (happy|sad|tired|worried|relaxed|excited)|smil|grinn|laugh|frown|excited|worried|cheerful/i,'From their faces, I can tell they\'re feeling … / She\'s smiling, so she must be …'],
+ ['Azione (present continuous)',/\b(is|are|'s|'re)\s+(not\s+)?\w+ing\b/i,'The man is …ing / The people are …ing'],
+ ['Posizione',/foreground|background|on the (left|right)|at the (top|bottom)|in the middle|next to|in front of|behind|\bnear\b|on top of|\bunder\b/i,'In the foreground … / On the left of the picture … / next to, behind, under'],
+ ['Ipotesi se non è chiaro',/looks? like|might be|could be|maybe|perhaps|seems? to/i,'It looks like a … / It might be a … / He could be …ing']];
+function evaluate(){
+  const t=$('#txt').value.trim(),w=t.split(/\s+/).filter(Boolean).length,r=$('#res');
+  r.classList.remove('hidden');
+  if(w<8){r.innerHTML='<b>Scrivi o parla un po\' di più</b><p class="lead">Servono almeno qualche frase: prova a seguire Chi → Cosa → Dove.</p>';return}
+  const hits=CH.map(c=>c[1].test(t)),n=hits.filter(Boolean).length;
+  const sents=t.split(/[.!?]+/).filter(s=>s.trim()).length;
+  const conn=/\b(however|while|whereas|although|also|besides|on the other hand|because|so)\b/i.test(t);
+  const notes=[];
+  if(w<50)notes.push(`Hai usato ${w} parole: punta a 60–100 per una descrizione completa (circa 1 minuto parlando).`);
+  if(sents<4)notes.push('Dividi in frasi più brevi: almeno 4–5 frasi chiare.');
+  if(!conn)notes.push('Collega le idee con while, whereas, because, so, also per un livello più alto.');
+  if(/\b(is|are)\s+(\w+s)\b/i.test(t)&&!hits[3])notes.push('Per dire cosa succede ora usa il present continuous (is/are + verbo-ing).');
+  if(/^i (think|believe)/i.test(t))notes.push('Inizia descrivendo ciò che vedi, poi aggiungi opinioni.');
+  const vf=n>=6?'Ottimo lavoro!':n>=4?'Buon lavoro, si può completare.':'Buon inizio: manca struttura.';
+  r.innerHTML=`<div class="score">${n}/6</div><b>${vf}</b>
+  <ul class="chk">${CH.map((c,i)=>`<li class="${hits[i]?'y':'n'}">${hits[i]?'✅':'⚠️'} <b>${c[0]}</b>${hits[i]?'':`<br><em>Prova:</em> ${c[2]}`}</li>`).join('')}</ul>
+  ${notes.length?`<p style="margin-top:14px"><b>Come migliorare</b></p><ul style="padding-left:20px;color:var(--mute)">${notes.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
+  <p class="lead" style="margin-top:14px;font-size:.88rem">Il feedback controlla struttura e frasi utili, non se il contenuto corrisponde alla foto. Per un controllo più completo usa «Copia per una IA».</p>`}
+
+/* ---------- FEEDBACK IA ---------- */
+const KEY='eng_studio_key';
+const getK=()=>{try{return localStorage.getItem(KEY)||''}catch(e){return ''}};
+function kst(){$('#kstat').textContent=getK()?'✅ Chiave salvata su questo dispositivo.':'Nessuna chiave salvata.'}
+$('#ksave').onclick=()=>{const v=$('#kin').value.trim();try{v?localStorage.setItem(KEY,v):localStorage.removeItem(KEY)}catch(e){}$('#kin').value='';kst()};kst();
+const esc=t=>t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const fmt=t=>esc(t).replace(/^#+\s*(.+)$/gm,'**$1**').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
+const toB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(b)});
+async function imgBlock(){
+  const im=$('#pic img');
+  if(im&&im.src.startsWith('data:')){const c=document.createElement('canvas');c.width=900;c.height=560;c.getContext('2d').drawImage(im,0,0,900,560);
+    return{type:'image',source:{type:'base64',media_type:'image/png',data:c.toDataURL('image/png').split(',')[1]}}}
+  try{const r=await fetch(picUrl);if(!r.ok)throw 0;const b=await r.blob();return{type:'image',source:{type:'base64',media_type:b.type||'image/jpeg',data:await toB64(b)}}}
+  catch(e){return{type:'image',source:{type:'url',url:picUrl}}}}
+async function aiFeedback(){
+  const k=getK(),box=$('#ai'),t=$('#txt').value.trim();box.classList.remove('hidden');
+  if(!k){box.innerHTML='<b>Vuoi il feedback dell\'IA sull\'immagine?</b><p class="lead">Apri «Feedback con IA» qui sopra e inserisci la tua chiave API.</p>';return}
+  box.innerHTML='<b>🤖 L\'IA sta guardando l\'immagine e leggendo il tuo testo…</b>';
+  try{
+    const img=await imgBlock();
+    const prompt=`You are an examiner coaching an Italian student for the B2 First speaking exam (picture description). Look at the image and the student's description below. If the text comes from speech dictation, ignore missing punctuation or capital letters. Reply in Italian, quoting English examples. Use exactly these bold headings:
+**Voto**: x/10 with one line of reasoning.
+**Corrispondenza con l'immagine**: what they described correctly, what is wrong or invented, and the most important things they missed.
+**Errori da correggere**: each grammar or vocabulary mistake as "wrong → right".
+**Struttura**: did they cover who / what / where, emotions, present continuous and speculation (looks like, might be)?
+**Come migliorare**: 3 concrete tips.
+**Versione migliorata**: a model description of about 80 words in English, built on the student's own text.
+Be concise and encouraging.
+
+Student's description:
+"""${t}"""`;
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-haiku-5-5',max_tokens:1100,messages:[{role:'user',content:[img,{type:'text',text:prompt}]}]})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(r.status===401?'Chiave API non valida.':(d.error&&d.error.message)||('Errore '+r.status));
+    box.innerHTML='<b>🤖 Feedback dell\'IA</b><div style="margin-top:10px">'+fmt(d.content.map(c=>c.text||'').join(''))+'</div>';
+    box.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }catch(e){box.innerHTML='<b>Non sono riuscito a contattare l\'IA</b><p class="lead">'+esc(String(e.message||e))+' Controlla la connessione e la chiave, oppure apri il file nel browser invece che nell\'anteprima.</p>'}}
+$('#ok').onclick=()=>{evaluate();if($('#txt').value.trim().split(/\s+/).length>=8)aiFeedback();else $('#ai').classList.add('hidden')};
+
+$('#cp').onclick=()=>{
+  const m=`I'm preparing for the B2 First speaking exam. Please check my picture description (who/what/where, emotions, present continuous, uncertainty phrases) and suggest improvements.\n${picUrl?'Image: '+picUrl+'\n':''}\nMy description:\n${$('#txt').value}`;
+  navigator.clipboard.writeText(m).then(()=>{$('#cp').textContent='Copiato!';setTimeout(()=>$('#cp').textContent='Copia per una IA',1800)}).catch(()=>prompt('Copia questo testo:',m))};
+</script>
+</body>
+</html>
