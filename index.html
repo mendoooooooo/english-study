@@ -186,17 +186,16 @@ details{margin-top:14px;background:var(--card);border:1px solid var(--line);bord
     <button class="btn rec" id="mic">🎤 Parla <span id="timer" style="margin-left:6px;font-variant-numeric:tabular-nums"></span></button>
     <button class="btn" id="ok">✓ Valuta con IA</button>
     <button class="btn ghost" id="cp">Copia per una IA</button>
-    <button class="btn ghost" id="translateOpen">🌐 Traduci una parola</button>
+    <button class="btn ghost" id="translateOpen">🌐 Traduci con Google Translate</button>
   </div>
   <div class="card hidden" id="translator" style="margin-top:18px;text-align:left;padding:22px">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-      <h3 style="font-size:1.35rem;margin:0">Traduci una parola</h3>
+      <h3 style="font-size:1.35rem;margin:0">Traduci con Google Translate</h3>
       <button class="btn ghost" id="translateClose" aria-label="Chiudi traduttore">✕</button>
     </div>
-    <p class="lead" style="margin-top:8px">Scrivi la parola o la frase italiana che vuoi tradurre in inglese.</p>
-    <input type="text" id="wordInput" placeholder="Es. passeggiare, ridere, cucinare…" autocomplete="off">
-    <div class="row"><button class="btn" id="translateBtn">Traduci in inglese</button></div>
-    <div id="translationResult" class="fb hidden" aria-live="polite"></div>
+    <p class="lead" style="margin-top:8px">Scrivi la parola o la frase italiana che vuoi tradurre.</p>
+    <input type="text" id="wordInput" placeholder="Es. passeggiare, montagna, cucinare…" autocomplete="off">
+    <div class="row"><button class="btn" id="translateBtn">Apri su Google Translate</button></div>
   </div>
 <p class="lead" id="micn" style="font-size:.9rem;color:var(--bad);margin-top:10px"></p>
   <div class="fb hidden" id="res" style="background:var(--card);border-color:var(--line)"></div>
@@ -402,7 +401,20 @@ function showSec(k){
   $('#phr').innerHTML=s.p.map((p,i)=>`<div class="ph" data-i="${i}"><div class="h"><span>${p[0]}</span><button class="spk" data-s="${p[1].replace(/"/g,'')}" aria-label="Ascolta">🔊</button></div><div class="ex">${p[1]}</div></div>`).join('');
   $('#phr').onclick=e=>{const sp=e.target.closest('.spk');if(sp){e.stopPropagation();speak(sp.dataset.s);return}const c=e.target.closest('.ph');if(c)c.classList.toggle('open')}}
 
-/* ---------- DESCRIBE ---------- */
+/* ---------- DESCRIBE (PERSONE CHE FANNO COSE) ---------- */
+const PEOPLE_IMAGES = [
+  { url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&h=560&fit=crop', desc: 'Colleghi che lavorano insieme in ufficio' },
+  { url: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=900&h=560&fit=crop', desc: 'Persone che cucinano insieme in cucina' },
+  { url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900&h=560&fit=crop', desc: 'Studenti che studiano in biblioteca' },
+  { url: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=900&h=560&fit=crop', desc: 'Persone che fanno acquisti al mercato' },
+  { url: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=900&h=560&fit=crop', desc: 'Amici che passeggiano nel parco' },
+  { url: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=900&h=560&fit=crop', desc: 'Riunione di lavoro in corso' },
+  { url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&h=560&fit=crop', desc: 'Clienti che mangiano in un ristorante' },
+  { url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=900&h=560&fit=crop', desc: 'Volontari che aiutano i bambini' },
+  { url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&h=560&fit=crop', desc: 'Presentazione aziendale con pubblico' },
+  { url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900&h=560&fit=crop', desc: 'Persone che usano i computer in aula studio' }
+];
+
 let picUrl='',picId=0;
 
 function newPic(){
@@ -411,31 +423,31 @@ function newPic(){
   const p = $('#pic');
   $('#txt').value = '';
   $('#res').classList.add('hidden');
-  picUrl = '';
+  
+  p.innerHTML = 'Caricamento immagine di persone...';
+  $('#srcn').textContent = 'Selezionando una scena...';
 
-  p.innerHTML = 'Caricamento foto dal web...';
-  $('#srcn').textContent = 'Connessione a Picsum Photos in corso...';
+  const item = PEOPLE_IMAGES[Math.floor(Math.random() * PEOPLE_IMAGES.length)];
+  picUrl = item.url;
 
   const photo = new Image();
-  photo.alt = 'Foto reale da descrivere';
+  photo.alt = item.desc;
   photo.crossOrigin = 'anonymous';
   
   photo.onload = () => {
     if(id !== picId) return;
     p.innerHTML = '';
     p.appendChild(photo);
-    picUrl = photo.src;
-    $('#srcn').textContent = 'Foto reale dal web pronta per la descrizione.';
+    $('#srcn').textContent = 'Scena: ' + item.desc;
   };
   
   photo.onerror = () => {
     if(id !== picId) return;
-    p.innerHTML = '<span style="padding:20px;text-align:center">Impossibile caricare la foto dal web. Controlla la connessione.</span>';
+    p.innerHTML = '<span style="padding:20px;text-align:center">Impossibile caricare l\'immagine.</span>';
     $('#srcn').textContent = 'Errore di caricamento.';
   };
 
-  // Endpoint Picsum Photos ultra-stabile per foto casuali di alta qualità
-  photo.src = `https://picsum.photos/900/560?random=${Math.floor(Math.random() * 100000)}`;
+  photo.src = item.url;
 }
 
 /* ---------- GESTIONE VOCALE E CRONOMETRO ---------- */
@@ -562,55 +574,22 @@ function evaluate(){
 
 $('#ok').addEventListener('click', evaluate);
 
-/* ---------- TRADUZIONE ONLINE CON FALLBACK SU GOOGLE TRANSLATE ---------- */
+/* ---------- TRADUZIONE CON GOOGLE TRANSLATE UFFICIALE ---------- */
 $('#translateOpen').onclick=()=>{
   $('#translator').classList.remove('hidden');
-  $('#translationResult').classList.add('hidden');
   $('#wordInput').focus();
 };
 $('#translateClose').onclick=()=>$('#translator').classList.add('hidden');
 
-async function translateWord(){
+function openGoogleTranslate(){
   const word=$('#wordInput').value.trim();
-  const resBox=$('#translationResult');
-  resBox.classList.remove('hidden');
-  if(!word){
-    resBox.className='fb no';
-    resBox.innerHTML='<b>Scrivi prima una parola o una frase.</b>';
-    return;
-  }
-  resBox.className='fb';
-  resBox.innerHTML='<b>Sto cercando la traduzione online…</b>';
-
-  try{
-    const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=it|en`);
-    if(!response.ok) throw new Error('Errore di connessione');
-    const data = await response.json();
-    const translated = data?.responseData?.translatedText;
-
-    if(!translated || data.responseStatus !== 200 || /MYMEMORY WARNING/i.test(translated)){
-      throw new Error('Servizio online non disponibile');
-    }
-
-    resBox.className='fb ok';
-    resBox.innerHTML=`<b>Traduzione in inglese:</b><div class="ans">${translated}</div><button class="btn ghost" id="listenTranslation" style="margin-top:8px">🔊 Ascolta</button>`;
-    $('#listenTranslation').onclick = () => speak(translated);
-
-  }catch(err){
-    resBox.className='fb no';
-    resBox.innerHTML=`<b>Traduzione online non riuscita.</b><p class="lead" style="margin:6px 0">Apro Google Translate con il testo inserito...</p><button class="btn" id="openGTranslate">Apri Google Translate</button>`;
-    
-    const triggerGoogle = () => {
-      const gUrl = `https://translate.google.com/?sl=it&tl=en&text=${encodeURIComponent(word)}&op=translate`;
-      window.open(gUrl, '_blank');
-    };
-    $('#openGTranslate').onclick = triggerGoogle;
-    triggerGoogle();
-  }
+  if(!word) return;
+  const gUrl = `https://translate.google.com/?sl=it&tl=en&text=${encodeURIComponent(word)}&op=translate`;
+  window.open(gUrl, '_blank');
 }
 
-$('#translateBtn').onclick=translateWord;
-$('#wordInput').addEventListener('keydown',e=>{if(e.key==='Enter')translateWord()});
+$('#translateBtn').onclick=openGoogleTranslate;
+$('#wordInput').addEventListener('keydown',e=>{if(e.key==='Enter')openGoogleTranslate()});
 
 $('#cp').onclick=()=>{
   const m=`I'm preparing for the B2 First speaking exam. Please check my picture description (who/what/where, emotions, present continuous, uncertainty phrases) and suggest improvements.\n${picUrl?'Image: '+picUrl+'\n':''}\nMy description:\n${$('#txt').value}`;
