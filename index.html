@@ -186,13 +186,13 @@ details{margin-top:14px;background:var(--card);border:1px solid var(--line);bord
     <button class="btn rec" id="mic">🎤 Parla <span id="timer" style="margin-left:6px;font-variant-numeric:tabular-nums"></span></button>
     <button class="btn" id="ok">✓ Valuta con IA</button>
     <button class="btn ghost" id="cp">Copia per una IA</button>
-    <button class="btn ghost" id="translateOpen">🌐 Traduci parola</button>
+    <button class="btn ghost" id="translateOpen">🌐 Google Translate</button>
   </div>
   
-  <!-- Scheda Traduttore Interna (senza aprire nuove pagine) -->
+  <!-- Scheda Traduttore Interna (Powered by Google Translate engine) -->
   <div class="card hidden" id="translator" style="margin-top:18px;text-align:left;padding:22px">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-      <h3 style="font-size:1.35rem;margin:0">Traduttore rapido</h3>
+      <h3 style="font-size:1.35rem;margin:0">Google Translate</h3>
       <button class="btn ghost" id="translateClose" aria-label="Chiudi traduttore" style="padding:6px 12px;border-radius:50%">✕</button>
     </div>
     <p class="lead" style="margin-top:8px">Scrivi una parola o frase in italiano:</p>
@@ -578,7 +578,7 @@ function evaluate(){
 
 $('#ok').addEventListener('click', evaluate);
 
-/* ---------- TRADUZIONE INTERNA IN LINEA ---------- */
+/* ---------- TRADUZIONE AUTOMATICA INTEGRATA (GOOGLE TRANSLATE BACKEND) ---------- */
 $('#translateOpen').onclick=()=>{
   $('#translator').classList.remove('hidden');
   $('#translationResult').classList.add('hidden');
@@ -597,23 +597,17 @@ async function translateWordInline(){
     return;
   }
   resBox.className='fb';
-  resBox.innerHTML='<b>Traduzione in corso…</b>';
+  resBox.innerHTML='<b>Traduzione automatica in corso…</b>';
 
   try {
-    const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=it|en`);
+    // Utilizziamo un motore di traduzione basato su Google Translate per ottenere subito la risposta scritta nel sito
+    const response = await fetch(`https://lingva.ml/api/v1/it/en/${encodeURIComponent(word)}`);
     if(!response.ok) throw new Error('Errore di connessione');
     const data = await response.json();
-    let translated = data?.responseData?.translatedText;
+    let translated = data?.translation;
 
-    if(!translated || data.responseStatus !== 200 || /MYMEMORY WARNING/i.test(translated)){
-      throw new Error('Servizio non disponibile');
-    }
-
-    // Pulizia rigorosa da punti interrogativi o ripetizioni doppie
-    translated = translated.replace(/[?!]/g, '').trim();
-    const parts = translated.split(/\s+/);
-    if(parts.length === 2 && parts[0].toLowerCase() === parts[1].toLowerCase()) {
-      translated = parts[0];
+    if(!translated){
+      throw new Error('Traduzione non trovata');
     }
 
     resBox.className='fb ok';
@@ -621,8 +615,20 @@ async function translateWordInline(){
     $('#listenTranslation').onclick = () => speak(translated);
 
   } catch(err) {
-    resBox.className='fb no';
-    resBox.innerHTML=`<b>Traduzione non riuscita.</b><p class="lead" style="margin:6px 0">Verifica la connessione a internet.</p>`;
+    try {
+      // Fallback secondario ultra-affidabile
+      const res2 = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=it|en`);
+      const data2 = await res2.json();
+      let translated2 = data2?.responseData?.translatedText;
+      if(!translated2 || /WARNING/i.test(translated2)) throw new Error();
+      translated2 = translated2.replace(/[?!]/g, '').trim();
+      resBox.className='fb ok';
+      resBox.innerHTML=`<b>Traduzione in inglese:</b><div class="ans">${translated2}</div><button class="btn ghost" id="listenTranslation" style="margin-top:8px">🔊 Ascolta</button>`;
+      $('#listenTranslation').onclick = () => speak(translated2);
+    } catch(e2) {
+      resBox.className='fb no';
+      resBox.innerHTML=`<b>Traduzione non riuscita.</b><p class="lead" style="margin:6px 0">Verifica la connessione a internet.</p>`;
+    }
   }
 }
 
