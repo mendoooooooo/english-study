@@ -155,12 +155,55 @@ a.btn{text-decoration:none;display:inline-block}
 .sum:not(.hidden){animation:rise .45s both}
 .rv{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;padding:12px 14px;margin-bottom:8px;background:var(--bg);border:1px solid var(--line);border-radius:14px;animation:rise .35s both}
 .rv i{color:var(--gold);font-style:normal;font-size:1.3rem}
-.rv b{color:var(--ok);font-family:Fraunces,serif;text-align:right;font-weight:600;overflow-wrap:anywhere}
+.rv b{color:var(--ok);font-family:Fraunces,serif;text-align:right;font-weight:600}
+.btn.ghost.done{background:#1f9d6b;color:#fff;border-color:#6ee7b7;animation:pop .35s both}
 @media(max-width:520px){.rv{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px;padding:10px 8px;font-size:.88rem}.rv i{font-size:1.05rem}.rv b{text-align:right}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ===== FX: animazioni extra (si vedono bene anche da telefono) ===== */
+html.calm *,html.calm *::before,html.calm *::after{animation:none!important;transition:none!important}
+html.calm #fl{display:none}
+.wrap{position:relative;z-index:1}
+#fl{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.fe{position:absolute;bottom:-70px;font-size:var(--s);opacity:.28;animation:floatUp var(--d) linear infinite;animation-delay:var(--w)}
+@keyframes floatUp{to{transform:translate(var(--x),-125vh) rotate(var(--r))}}
+body::before,body::after{content:"";position:fixed;z-index:-1;width:75vmax;height:75vmax;border-radius:50%;filter:blur(70px);opacity:.38;pointer-events:none}
+body::before{background:radial-gradient(circle,#7c5cff,transparent 62%);top:-25vmax;left:-25vmax;animation:aur 14s ease-in-out infinite alternate}
+body::after{background:radial-gradient(circle,#ff8fab,transparent 62%);bottom:-30vmax;right:-25vmax;animation:aur 18s ease-in-out infinite alternate-reverse}
+@keyframes aur{to{transform:translate(32vmax,22vmax) scale(1.3) rotate(70deg)}}
+.view.on{animation:viewIn .55s cubic-bezier(.2,.9,.2,1) backwards}
+@keyframes viewIn{from{opacity:0;transform:translateX(40px) scale(.97);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+.sub>.tw,.tiles>.tile{animation:flipIn .7s cubic-bezier(.2,.9,.25,1.15) backwards}
+.sub>.tw:nth-child(2),.tiles>.tile:nth-child(2){animation-delay:.09s}
+.sub>.tw:nth-child(3){animation-delay:.18s}.sub>.tw:nth-child(4){animation-delay:.27s}.sub>.tw:nth-child(5){animation-delay:.36s}.sub>.tw:nth-child(n+6){animation-delay:.45s}
+@keyframes flipIn{from{opacity:0;transform:perspective(700px) rotateX(-75deg) translateY(40px) scale(.85)}to{opacity:1;transform:none}}
+.tile .ic{animation:bob 3.2s ease-in-out infinite}
+.tw:nth-child(2n) .ic,.tiles>.tile:nth-child(2) .ic{animation-delay:-1.1s}.tw:nth-child(3n) .ic{animation-delay:-2.1s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-8px) rotate(8deg)}60%{transform:translateY(2px) rotate(-6deg)}}
+.tile::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,#ffffff2e 50%,transparent 65%);transform:translateX(-130%);animation:sheen 5s ease-in-out infinite}
+.tw:nth-child(2n) .tile::after,.tiles>.tile:nth-child(2)::after{animation-delay:1.7s}.tw:nth-child(3n) .tile::after{animation-delay:3.1s}
+@keyframes sheen{0%,55%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+.jel.jel{animation:jelly .55s ease-out}
+@keyframes jelly{0%{transform:scale(1)}25%{transform:scale(.86,1.1)}50%{transform:scale(1.1,.92)}75%{transform:scale(.97,1.03)}100%{transform:scale(1)}}
+.tw:has(.tile:active){transform:scale(.9);filter:drop-shadow(0 0 22px #f2c66dcc)}
+.btn:active{filter:brightness(1.2) drop-shadow(0 0 14px #f2c66d99)}
+.ch{display:inline-block;animation:wave 3.2s ease-in-out infinite;animation-delay:calc(var(--i)*.09s)}
+@keyframes wave{0%,55%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-14px) rotate(-6deg)}40%{transform:translateY(3px) rotate(4deg)}}
+.card.flip{animation:cardIn .65s cubic-bezier(.2,.9,.2,1) both}
+@keyframes cardIn{from{opacity:0;transform:perspective(800px) rotateY(-85deg) scale(.88)}to{opacity:1;transform:none}}
+.card.okg{animation:okglow .8s ease-out}
+@keyframes okglow{0%{box-shadow:0 0 0 0 #6ee7b9aa,0 30px 60px -30px #000a}100%{box-shadow:0 0 0 46px #6ee7b900,0 30px 60px -30px #000a}}
+.bar i{position:relative;overflow:hidden}
+.bar i::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,#ffffff38 0 9px,transparent 9px 18px);animation:stripes 1s linear infinite}
+@keyframes stripes{to{background-position:36px 0}}
+.pic img{animation:reveal .9s cubic-bezier(.2,.9,.2,1) both}
+@keyframes reveal{from{opacity:0;transform:scale(1.18);filter:blur(18px)}to{opacity:1;transform:none;filter:blur(0)}}
+.spark{position:fixed;pointer-events:none;z-index:90;font-size:1.1rem;animation:cf .8s ease-out forwards}
+#fxb{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:45;width:48px;height:48px;border-radius:50%;background:var(--card);border:1.5px solid var(--gold);font-size:1.35rem;box-shadow:0 8px 24px #0009;animation:pulse 2.4s infinite}
+html.calm #fxb{opacity:.6;filter:grayscale(1)}
+
 </style>
 </head>
 <body>
+<div id="fl" aria-hidden="true"></div>
 <div class="wrap">
 
 <section class="view on" id="home">
@@ -206,7 +249,8 @@ a.btn{text-decoration:none;display:inline-block}
   <p class="lead" style="font-size:.85rem;margin-top:8px">Se lasci vuota l'emoji la scelgo io in base al titolo.</p>
   <label for="tdesc" style="display:block;margin-top:14px;font-weight:600">Descrizione dell'argomento</label><textarea id="tdesc" rows="2" placeholder="La descrizione viene proposta automaticamente e puoi modificarla."></textarea>
   <p class="lead" style="margin-top:16px">Carica la foto della pagina del libro: leggo le coppie «inglese (italiano)» e le trasformo in flashcard. Poi puoi correggere il testo. Per creare delle sezioni scrivi una riga come #Family 👨‍👩‍👧‍👦 prima delle sue parole (l'emoji è facoltativa: se manca la scelgo dal nome). Se una parola ha più traduzioni valide, separale con « / ».</p>
-  <div class="row"><label class="btn ghost" for="tfile" style="cursor:pointer">📷 Scegli foto</label><input type="file" id="tfile" accept="image/*" hidden><button class="btn" id="tread">Leggi la foto</button></div>
+  <div class="row"><label class="btn ghost" id="tpick" for="tfile" style="cursor:pointer">📷 Scegli foto</label><input type="file" id="tfile" accept="image/*" hidden><button class="btn" id="tread">Leggi la foto</button><button class="btn ghost" id="tpaste">📋 Incolla testo</button></div>
+  <p class="lead" style="font-size:.85rem;margin-top:8px">La lettura automatica non è perfetta. Per un risultato migliore, dal telefono apri la foto e tieni premuto sul testo (iPhone: «Testo dal vivo», Android: Google Lens), copia e premi «Incolla testo».</p>
   <p class="lead" id="tstat" style="margin-top:10px"></p>
   <textarea id="tlist" placeholder="Una parola per riga, così:&#10;a blind date (appuntamento al buio)"></textarea>
   <div class="row"><button class="btn" id="tsave">Salva argomento</button></div>
@@ -270,6 +314,7 @@ a.btn{text-decoration:none;display:inline-block}
   <div class="row"><button class="btn" id="trgo">Traduci</button></div>
   <div id="trout" class="fb hidden" aria-live="polite"></div>
 </div>
+<button id="fxb" aria-label="Attiva o disattiva gli effetti" title="Effetti">✨</button>
 <script>
 const $=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -355,7 +400,7 @@ Trattare qualcuno con rispetto|to treat somebody with respect
 Fidarsi|to trust`.split('\n').map(l=>{const [it,en]=l.split('|');return{it,alts:en.split('/')}});
 const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’]/g,"'").replace(/\b(sb|sth|somebody|someone|something)\b/g,'').replace(/^to /,'').replace(/[^a-z' ]/g,' ').replace(/\s+/g,' ').trim();
 function lev(a,b){const d=[...Array(a.length+1)].map((_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return d[a.length][b.length]}
-const G={love:[[0,6]],friendship:[[11,15]],family:[[16,33]],marriage:[[7,10],[34,55]],birth:[[56,66]],verbs:[[67,76]]};
+const G={love:[[0,6]],friendship:[[11,15]],family:[[16,33]],marriage:[[7,10],[34,54]],birth:[[55,65]],verbs:[[66,75]]};
 const BUILT=[['love','❤️','Love','Amore, attrazione e flirt.'],['friendship','🤝','Friendship and relations','Conoscenze, amicizia e relazioni sociali.'],['family','👨‍👩‍👧‍👦','Family','Famiglia, parenti e rapporti familiari.'],['marriage','💍','Marriage','Matrimonio, cerimonia e vita di coppia.'],['birth','👶','Birth','Nascita, gravidanza e bambini.'],['verbs','💬','Verbs and expressions','Verbi ed espressioni utili.']];
 const CK='eng_topics';
 const loadC=()=>{try{return JSON.parse(localStorage.getItem(CK))||[]}catch(e){return[]}};
@@ -384,8 +429,9 @@ const saveH=a=>{try{localStorage.setItem(HK,JSON.stringify(a))}catch(e){}};
 const unitData=()=>BUILT.map(b=>({name:b[2],emoji:b[1],cards:RAW.filter((_,i)=>(G[b[0]]||[]).some(r=>i>=r[0]&&i<=r[1]))}));
 const tl=(id,e,t,d,alt,menu)=>`<div class="tw"><button class="tile${alt?' alt':''}" data-t="${id}"><div><div class="ic">${e}</div><h3>${esc(t)}</h3></div><span>${esc(d)}</span></button>${menu?`<button class="dots" data-m="${id}" aria-label="Opzioni argomento">⋮</button>`:''}</div>`;
 function renderTopics(){
-  const c=loadC(),h=loadH().includes('u21');let i=0;
-  $('#topics').innerHTML=(h?'':tl('u21','💞',UT,'Love, friendship, family, marriage, birth e verbi utili.',i++%2,1))+c.map(x=>tl(x.id,x.emoji||emojiFor(x.title),x.title,x.description||makeDescription(x.title,x.sections||[]),i++%2,1)).join('')+tl('errors','🎯','Errori frequenti','Ripassa le parole in cui hai sbagliato o chiesto aiuto.',i++%2,h)+'<div class="tw"><button class="tile add" data-add="1"><div><div class="ic">➕</div><h3>Aggiungi argomento</h3></div><span>Carica la foto del libro e creo le flashcard.</span></button></div>'
+  const c=loadC(),ov=c.find(x=>x.id==='u21'),rest=c.filter(x=>x.id!=='u21');let i=0;
+  const unit=ov?tl('u21',ov.emoji||'💞',ov.title,ov.description||makeDescription(ov.title,ov.sections||[]),i++%2,1):tl('u21','💞',UT,'Love, friendship, family, marriage, birth e verbi utili.',i++%2,1);
+  $('#topics').innerHTML=unit+rest.map(x=>tl(x.id,x.emoji||emojiFor(x.title),x.title,x.description||makeDescription(x.title,x.sections||[]),i++%2,1)).join('')+tl('errors','🎯','Errori frequenti','Ripassa le parole in cui hai sbagliato o chiesto aiuto.',i++%2,0)+'<div class="tw"><button class="tile add" data-add="1"><div><div class="ic">➕</div><h3>Aggiungi argomento</h3></div><span>Carica la foto del libro e creo le flashcard.</span></button></div>'
 }
 let topic=null;
 function topicSecs(id){
@@ -422,31 +468,70 @@ function openEditor(id){
   if(id)ensureSnapshot(id,id==='u21'?(loadC().find(x=>x.id==='u21')||initialTopic('u21')):c);
   $('#tname').value=c?c.title:'';$('#temoji').value=c?(c.emoji||''):'';
   $('#tlist').value=c?toText(c.sections||[{name:c.title,emoji:c.emoji,cards:c.cards}]):'';
-  $('#tdesc').value=c?(c.description||makeDescription(c.title,c.sections||[])):'';descEdited=!!c?.description;
-  $('#temoji').placeholder=emojiFor($('#tname').value);$('#tfile').value='';$('#tstat').textContent='';
+  $('#tdesc').value=c?(c.description||makeDescription(c.title,c.sections||[])):'';descEdited=!!(c&&c.description);
+  $('#temoji').placeholder=emojiFor($('#tname').value);$('#tfile').value='';resetPick();$('#tstat').textContent='';
   $('#atitle').textContent=id?'Modifica argomento':'Nuovo argomento';$('#tsave').textContent=id?'Salva modifiche':'Salva argomento';
   go('addtopic')}
 $('#tname').addEventListener('input',()=>{$('#temoji').placeholder=emojiFor($('#tname').value);if(!descEdited)$('#tdesc').value=makeDescription($('#tname').value,parseSecs($('#tlist').value,$('#tname').value,$('#temoji').value||emojiFor($('#tname').value)))});
 $('#tlist').addEventListener('input',()=>{if(!descEdited)$('#tdesc').value=makeDescription($('#tname').value,parseSecs($('#tlist').value,$('#tname').value,$('#temoji').value||emojiFor($('#tname').value)))});
 $('#tdesc').addEventListener('input',()=>{descEdited=true});
+const IT_FIX=[[/\bq[l1iI]n\b/gi,'qualcuno'],[/\bq[l1iI][sS]\b/gi,'qualcosa'],[/\bqc\b/gi,'qualcosa']];
+function cleanOCR(text){
+  const L=text.split('\n').map(l=>l.trim()).filter(Boolean),out=[];
+  for(let i=0;i<L.length;i++){
+    let l=L[i];
+    if(l.includes('(')&&!l.includes(')')&&i+1<L.length&&!L[i+1].includes('(')){l+=' '+L[++i]}
+    l=l.replace(/[|\\]/g,'').replace(/^[^A-Za-z(]+/,'').replace(/\s+/g,' ');
+    const m=l.match(/^([A-Za-z][A-Za-z'’\-\/ ,.]{1,70}?)\s*\(([^()]{2,90})\)\s*[.;,]?$/);
+    if(!m)continue;
+    let it=m[2];IT_FIX.forEach(([r,t])=>{it=it.replace(r,t)});
+    out.push(m[1].trim().replace(/\bsb\b/gi,'somebody').replace(/\bsth\b/gi,'something')+' ('+it.trim()+')')}
+  return out}
+const okey=l=>l.split('(')[0].toLowerCase().replace(/[^a-z]/g,'');
+function mergeLines(list,acc,seen){list.forEach(l=>{const k=okey(l);if(k.length>3&&!seen.has(k)){seen.add(k);acc.push(l)}})}
+async function prepImage(file){
+  const bmp=await createImageBitmap(file,{imageOrientation:'from-image'}).catch(()=>createImageBitmap(file));
+  const sc=Math.max(.5,Math.min(2.5,3200/Math.max(bmp.width,bmp.height)));
+  const c=document.createElement('canvas');c.width=Math.round(bmp.width*sc);c.height=Math.round(bmp.height*sc);
+  const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(bmp,0,0,c.width,c.height);
+  const d=x.getImageData(0,0,c.width,c.height),px=d.data,h=new Uint32Array(256);
+  for(let i=0;i<px.length;i+=4){const g=(px[i]*299+px[i+1]*587+px[i+2]*114)/1000|0;px[i]=g;h[g]++}
+  const cdf=new Float32Array(256);let a=0;for(let i=0;i<256;i++){a+=h[i];cdf[i]=a}
+  const n=c.width*c.height,lo=cdf.find(v=>v>0),lut=new Uint8Array(256);
+  for(let i=0;i<256;i++)lut[i]=Math.round(.55*(255*(cdf[i]-lo)/(n-lo))+.45*i);
+  for(let i=0;i<px.length;i+=4){const v=lut[px[i]];px[i]=px[i+1]=px[i+2]=v}
+  x.putImageData(d,0,0);return c}
+function resetPick(){const p=$('#tpick');p.classList.remove('done');p.textContent='📷 Scegli foto'}
+$('#tfile').addEventListener('change',()=>{const f=$('#tfile').files[0],p=$('#tpick');p.classList.toggle('done',!!f);p.textContent=f?'✅ Foto scelta':'📷 Scegli foto'});
+function addToList(lines,st,src){
+  const cur=$('#tlist').value.trim();
+  $('#tlist').value=(cur?cur+'\n':'')+lines.join('\n');
+  st.textContent=lines.length?`${src}: ho trovato ${lines.length} parole. Controlla e correggi il testo, poi salva.`:'Non ho trovato coppie «inglese (italiano)»: prova una foto più nitida o scrivile a mano qui sotto.'}
 $('#tread').onclick=async()=>{
   const f=$('#tfile').files[0],st=$('#tstat');
   if(!f){st.textContent='Scegli prima una foto.';return}
-  st.textContent='Leggo la foto… (la prima volta scarica il motore di lettura, può servire un minuto)';
+  st.textContent='Preparo la foto…';let pass=1;
   try{
+    const c=await prepImage(f);
     if(!window.Tesseract)await new Promise((ok,ko)=>{const x=document.createElement('script');x.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';x.onload=ok;x.onerror=ko;document.head.appendChild(x)});
-    const r=await Tesseract.recognize(f,'eng+ita',{logger:m=>{if(m.status==='recognizing text')st.textContent='Leggo la foto… '+Math.round(m.progress*100)+'%'}});
-    let buf='';const out=[];
-    r.data.text.split('\n').forEach(l=>{l=l.trim();if(!l)return;buf=(buf+' '+l).trim();if((buf.match(/\(/g)||[]).length<=(buf.match(/\)/g)||[]).length){out.push(buf);buf=''}});
-    if(buf)out.push(buf);
-    const ok=out.filter(l=>parseList(l).length);
-    $('#tlist').value=($('#tlist').value.trim()?$('#tlist').value.trim()+'\n':'')+ok.join('\n');
-    st.textContent=ok.length?`Ho trovato ${ok.length} parole. Controlla e correggi il testo (la lettura può sbagliare qualche lettera), poi salva.`:'Non ho trovato coppie «inglese (italiano)»: prova una foto più nitida o scrivile a mano qui sotto.'
-  }catch(e){st.textContent='Non riesco a leggere la foto (serve internet). Puoi scrivere le parole a mano qui sotto.'}};
+    const w=await Tesseract.createWorker('eng+ita',1,{logger:m=>{if(m.status==='recognizing text')st.textContent=`Leggo la foto… passata ${pass}/2 · ${Math.round(m.progress*100)}% (la prima volta scarica il motore, può servire un minuto)`}});
+    const acc=[],seen=new Set();
+    await w.setParameters({tessedit_pageseg_mode:'4',preserve_interword_spaces:'1'});
+    mergeLines(cleanOCR((await w.recognize(c)).data.text),acc,seen);pass=2;
+    await w.setParameters({tessedit_pageseg_mode:'11'});
+    mergeLines(cleanOCR((await w.recognize(c)).data.text),acc,seen);
+    await w.terminate();
+    addToList(acc,st,'Lettura automatica')
+  }catch(e){st.textContent='Non riesco a leggere la foto (serve internet). Prova «Incolla testo» oppure scrivi le parole a mano qui sotto.'}};
+$('#tpaste').onclick=async()=>{
+  const st=$('#tstat');
+  try{const t=await navigator.clipboard.readText();if(!t.trim()){st.textContent='Gli appunti sono vuoti.';return}
+    const lines=cleanOCR(t);if(lines.length)addToList(lines,st,'Testo incollato');else{$('#tlist').value=($('#tlist').value.trim()?$('#tlist').value.trim()+'\n':'')+t.trim();st.textContent='Testo incollato: sistema le righe nel formato «english (italiano)».'}}
+  catch(e){st.textContent='Non posso leggere gli appunti da qui: tieni premuto nella casella qui sotto e scegli «Incolla».'}};
 function openErrMenu(){
-  const o=loadE(),list=[];
-  if(!loadH().includes('u21'))list.push({id:'u21',e:'💞',t:UT});
-  loadC().forEach(c=>list.push({id:c.id,e:c.emoji||emojiFor(c.title),t:c.title}));
+  const o=loadE(),list=[],cs=[...loadC()].sort((a,b)=>(b.id==='u21')-(a.id==='u21'));
+  if(!cs.some(x=>x.id==='u21'))list.push({id:'u21',e:'💞',t:UT});
+  cs.forEach(c=>list.push({id:c.id,e:c.emoji||emojiFor(c.title),t:c.title}));
   $('#errs').innerHTML=list.map((x,i)=>{const n=Object.keys(o[x.id]||{}).length;return tl(x.id,x.e,x.t,n?n+' parole da ripassare':'Nessun errore, bravo! 🌟',i%2)}).join('')||'<p class="lead">Nessun argomento.</p>';
   go('errmenu')}
 $('#errs').onclick=e=>{const t=e.target.closest('[data-t]');if(t)startErrors(t.dataset.t)};
@@ -459,7 +544,7 @@ $('#tsave').onclick=()=>{
   if(!saveC(a)){st.textContent='Impossibile salvare: il browser blocca la memoria locale.';return}
   const snaps=loadSnap();if(!snaps[savingId]){snaps[savingId]=clone(rec);saveSnap(snaps)}
   if(editId==='u21')saveH(loadH().filter(x=>x!=='u21'));
-  editId=null;descEdited=false;$('#tname').value='';$('#temoji').value='';$('#tdesc').value='';$('#tlist').value='';$('#tfile').value='';st.textContent='';go('cardmenu')};
+  editId=null;descEdited=false;$('#tname').value='';$('#temoji').value='';$('#tdesc').value='';$('#tlist').value='';$('#tfile').value='';resetPick();st.textContent='';go('cardmenu')};
 
 let Q=[],DECK=[],cur=null,right=0,wrong=0,total=0,activeGroup='all';
 let errMode=false,errTopic=null,hintLv=0,hinted=false,firstDone=new Set(),sess={ok:0,ko:[]};
@@ -476,7 +561,7 @@ const errKey=c=>c.it+'|'+secOf(c);
 function addErr(c){const id=tid();if(!id)return;const o=loadE(),t=o[id]=o[id]||{},k=errKey(c);t[k]=t[k]||{it:c.it,alts:c.alts,sec:secOf(c),n:0,streak:0};t[k].n=(t[k].n||0)+1;t[k].streak=0;t[k].last=Date.now();saveE(o)}
 function delErr(c){const id=tid(),o=loadE(),k=errKey(c);if(id&&o[id]&&o[id][k]){const item=o[id][k];item.streak=(item.streak||0)+1;item.last=Date.now();if(item.streak>=3)delete o[id][k];saveE(o)}}
 function deckFor(g){
-  if(g==='all21')return RAW;
+  if(g==='all21'){const u=loadC().find(x=>x.id==='u21');return u?u.cards:RAW}
   if(g.startsWith('c:')){const [,id,i]=g.split(':'),c=loadC().find(x=>x.id===id);return c?(c.sections||[{cards:c.cards}])[+i].cards:[]}
   return RAW.filter((_,i)=>(G[g]||[]).some(r=>i>=r[0]&&i<=r[1]))}
 function beginDeck(){firstDone=new Set();sess={ok:0,ko:[]};Q=DECK.map((_,i)=>i).sort(()=>Math.random()-.5);right=wrong=0;total=Q.length;go('cards');nextC()}
@@ -501,7 +586,7 @@ function finish(){
 function nextC(){
   hintLv=0;hinted=false;$('#hb').classList.remove('off');$('#hb').textContent='💡 Indizio';
   if(!Q.length){finish();return}
-  cur=DECK[Q[0]];{const cd=$('#card');cd.classList.remove('flip');void cd.offsetWidth;cd.classList.add('flip')}
+  cur=DECK[Q[0]];{const cd=$('#card');cd.classList.remove('flip','okg','shk');void cd.offsetWidth;cd.classList.add('flip')}
   $('#front').textContent=cur.it;$('#seclab').textContent=errMode?secOf(cur):'';$('#seclab').classList.toggle('hidden',!errMode);
   $('#hint').textContent='';$('#ans').value='';$('#sum').classList.add('hidden');
   $('#inp').classList.remove('hidden');$('#fb').classList.add('hidden');
@@ -511,7 +596,7 @@ function grade(skip){
   const u=norm($('#ans').value);let ok=false,near=false;
   if(!skip&&u)for(const a of cur.alts){const n=norm(a);if(n===u)ok=true;else if(n.length>5&&lev(n,u)<=1)near=true}
   const good=ok||near,fb=$('#fb');
-  {const cd=$('#card');cd.classList.remove('shk');void cd.offsetWidth;if(!good)cd.classList.add('shk')}
+  {const cd=$('#card');cd.classList.remove('shk','okg');void cd.offsetWidth;cd.classList.add(good?'okg':'shk');if(good){const r=cd.getBoundingClientRect();sparks(r.left+r.width/2,r.top+r.height/3,12)}}
   fb.className='fb '+(good?'ok':'no');
   $('#fh').textContent=skip?'Ecco la risposta':ok?'✅ Esatto!':near?'✅ Quasi perfetto: controlla lo spelling':'❌ Non proprio';
   $('#fa').textContent=cur.alts.join('   oppure   ');
@@ -713,7 +798,8 @@ $('#cp').onclick=()=>{
 
 /* ---------- EFFETTI ---------- */
 function ask(msg,ok){return new Promise(res=>{const d=document.createElement('div');d.className='dlg';d.innerHTML=`<div role="alertdialog"><b style="font-size:1.15rem;font-family:Fraunces,serif">${esc(msg)}</b><div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn ghost" data-r="0">Annulla</button><button class="btn" data-r="1" style="background:var(--bad);color:#3b0016">${ok}</button></div></div>`;d.onclick=e=>{const b=e.target.closest('[data-r]');if(b||e.target===d){d.remove();res(!!b&&b.dataset.r==='1')}};document.body.appendChild(d)})}
-function burst(x,y){const em=['🎉','✨','⭐','💜','🎊'];for(let i=0;i<22;i++){const c=document.createElement('span');c.className='conf';c.textContent=em[i%em.length];c.style.cssText=`left:${x}px;top:${y}px;--x:${(Math.random()-.5)*340}px;--y:${-60-Math.random()*260}px;--r:${(Math.random()-.5)*540}deg`;document.body.appendChild(c);setTimeout(()=>c.remove(),1200)}}
+const calm=()=>document.documentElement.classList.contains('calm');
+function burst(x,y){if(calm())return;const em=['🎉','✨','⭐','💜','🎊'];for(let i=0;i<22;i++){const c=document.createElement('span');c.className='conf';c.textContent=em[i%em.length];c.style.cssText=`left:${x}px;top:${y}px;--x:${(Math.random()-.5)*340}px;--y:${-60-Math.random()*260}px;--r:${(Math.random()-.5)*540}deg`;document.body.appendChild(c);setTimeout(()=>c.remove(),1200)}}
 document.addEventListener('pointerdown',e=>{
   const b=e.target.closest('button,.btn,.ph');if(!b||b.disabled)return;
   const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height)*2,x=document.createElement('span');
@@ -721,6 +807,28 @@ document.addEventListener('pointerdown',e=>{
   if(getComputedStyle(b).position==='static')b.style.position='relative';
   b.style.overflow='hidden';b.appendChild(x);setTimeout(()=>x.remove(),650);
   try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}});
+
+/* ---------- FX ---------- */
+function sparks(x,y,n=7){if(calm())return;const em=['✨','💫','⭐','🌟'];for(let i=0;i<n;i++){const c=document.createElement('span');c.className='spark';c.textContent=em[i%em.length];const a=Math.random()*6.283,d=40+Math.random()*70;c.style.cssText=`left:${x}px;top:${y}px;--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d}px;--r:${(Math.random()-.5)*360}deg`;document.body.appendChild(c);setTimeout(()=>c.remove(),850)}}
+(function(){
+  const fl=$('#fl'),em=['📚','✏️','📖','🎓','🖊️','📝','🗣️','💬','🇬🇧','🇺🇸','🔤','📒','🎒','🏫','🧠','💡','🎧','🌍','☕','🫖','🗽','🔍','✍️','📓','🎤','👩‍🏫','👨‍🎓','💭','📐','🏆'];
+  for(let i=0;i<20;i++){const e=document.createElement('span');e.className='fe';e.textContent=em[i%em.length];e.style.cssText=`left:${Math.random()*100}%;--s:${18+Math.random()*26}px;--d:${16+Math.random()*18}s;--w:${-Math.random()*30}s;--x:${(Math.random()-.5)*160}px;--r:${(Math.random()-.5)*540}deg`;fl.appendChild(e)}
+  fl.addEventListener('animationiteration',ev=>{const t=ev.target;if(t.classList&&t.classList.contains('fe')){t.textContent=em[Math.floor(Math.random()*em.length)];t.style.left=Math.random()*100+'%'}});
+  const h=document.querySelector('.hero h1');let n=0;
+  const wrap=node=>[...node.childNodes].forEach(c=>{if(c.nodeType===3){const f=document.createDocumentFragment();[...c.textContent].forEach(ch=>{const s=document.createElement('span');s.className='ch';s.textContent=ch;s.style.setProperty('--i',n++);f.appendChild(s)});node.replaceChild(f,c)}else if(c.nodeType===1&&c.tagName!=='BR')wrap(c)});
+  if(h)wrap(h);
+  const r=matchMedia('(prefers-reduced-motion: reduce)');let pref=null;try{pref=localStorage.getItem('eng_fx')}catch(e){}
+  const apply=()=>document.documentElement.classList.toggle('calm',!(pref?pref==='on':!r.matches));apply();
+  $('#fxb').onclick=()=>{const was=calm();pref=was?'on':'off';try{localStorage.setItem('eng_fx',pref)}catch(e){}apply();if(was)sparks(innerWidth-40,innerHeight-40,14)};
+  let tw=null;
+  document.addEventListener('pointerdown',e=>{
+    const j=e.target.closest('.tw,.btn,.back,.tab,.opt,.spk,.dots');
+    if(j&&!calm()){j.classList.remove('jel');void j.offsetWidth;j.classList.add('jel');setTimeout(()=>j.classList.remove('jel'),600)}
+    const t=e.target.closest('.tw .tile');tw=t&&!calm()?t.parentElement:null});
+  document.addEventListener('pointermove',e=>{if(!tw)return;const b=tw.getBoundingClientRect(),x=(e.clientX-b.left)/b.width-.5,y=(e.clientY-b.top)/b.height-.5;tw.style.transform=`perspective(600px) rotateX(${(-y*26).toFixed(1)}deg) rotateY(${(x*26).toFixed(1)}deg) scale(.93)`});
+  const rel=()=>{if(tw){tw.style.transform='';tw=null}};
+  document.addEventListener('pointerup',rel);document.addEventListener('pointercancel',rel);
+})();
 </script>
 </body>
 </html>
