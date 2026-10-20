@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,800;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+/* Stili globali, palette e impostazioni base del sito. */
 :root{--bg:#15122b;--bg2:#1f1b40;--card:#2a2557;--ivory:#f6f1ff;--mute:#a9a3cf;--gold:#f2c66d;--rose:#ff8fab;--ok:#6ee7b7;--bad:#ff7a90;--line:#3b3577;--r:22px}
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
@@ -20,6 +21,7 @@ button{font:inherit;cursor:pointer;border:0;color:inherit}
 .back{background:var(--card);border:1px solid var(--line);padding:9px 16px;border-radius:99px;color:var(--mute);transition:.2s}
 .back:hover{color:var(--ivory);border-color:var(--gold)}
 .top h2{font-size:1.5rem}
+/* Stile della schermata iniziale e delle card principali. */
 /* home */
 .hero{padding:56px 0 34px}
 .hero h1{font-size:clamp(2.6rem,9vw,5rem);font-weight:800;letter-spacing:-.02em}
@@ -35,6 +37,7 @@ button{font:inherit;cursor:pointer;border:0;color:inherit}
 .tile.alt{background:linear-gradient(160deg,#4b2a62,var(--bg2))}
 .sub{display:grid;gap:16px;grid-template-columns:1fr 1fr}
 @media(max-width:640px){.sub{grid-template-columns:1fr}}
+/* Stili delle flashcard, pulsanti, risposte e avanzamento. */
 /* flashcards */
 .bar{height:6px;background:var(--bg2);border-radius:9px;overflow:hidden;margin-bottom:10px}
 .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width .4s}
@@ -58,6 +61,7 @@ textarea{min-height:170px;resize:vertical;font-size:1rem}
 .fb b{font-size:1.1rem}.fb .ans{font-family:Fraunces,serif;font-size:1.5rem;color:var(--ok);margin:6px 0}
 .fb.no .ans{color:var(--gold)}
 .hidden{display:none!important}
+/* Stili del ripasso, delle schede espandibili e del quiz. */
 /* review */
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
 .tab{padding:10px 18px;border-radius:99px;background:var(--card);border:1px solid var(--line);color:var(--mute)}
@@ -75,6 +79,7 @@ textarea{min-height:170px;resize:vertical;font-size:1rem}
 .opt{padding:10px 18px;border-radius:12px;background:var(--bg);border:1px solid var(--line);margin:0 8px 8px 0}
 .opt:hover{border-color:var(--gold)}
 .opt.right{background:#0f3a2c;border-color:var(--ok)}.opt.wrong{background:#3b1626;border-color:var(--bad)}
+/* Stili dell’esercizio di descrizione immagini. */
 /* describe */
 .pic{background:var(--bg2);border-radius:24px;overflow:hidden;border:1px solid var(--line);min-height:200px;display:grid;place-items:center;color:var(--mute);text-align:center;padding:0}
 .pic img{width:100%;height:auto;max-height:75dvh;object-fit:contain;display:block}
@@ -206,17 +211,20 @@ html.calm #fxb{opacity:.6;filter:grayscale(1)}
 <div id="fl" aria-hidden="true"></div>
 <div class="wrap">
 
+<!-- Schermata iniziale: pulsanti per Flashcard e Describing a picture. -->
 <section class="view on" id="home">
   <div class="hero">
     <h1>English<br><em>Studio</em></h1>
     <p>Vocabolario, strutture e pratica orale per il B2 First. Scegli da dove partire.</p>
   </div>
   <div class="tiles">
-    <button class="tile" onclick="go('cardmenu')"><div><div class="ic">🃏</div><h3>Flashcard</h3></div><span>Traduci dall'italiano all'inglese: vocaboli su relazioni e vita.</span></button>
+    <!-- Creazione del pulsante Flashcard, che apre il menu degli argomenti. -->
+    <button class="tile" onclick="go('cardmenu')"><div><div class="ic">🃏</div><h3>Flashcard</h3></div><span>Traduci dall'italiano all'inglese: ripassa vocaboli per argomenti.</span></button>
     <button class="tile alt" onclick="go('menu')"><div><div class="ic">🖼️</div><h3>Describing a picture</h3></div><span>Ripassa le strutture, poi allenati a descrivere immagini.</span></button>
   </div>
 </section>
 
+<!-- Menu della sezione Describing a picture. -->
 <section class="view" id="menu">
   <div class="top"><button class="back" onclick="go('home')">← Home</button><h2>Describing a picture</h2></div>
   <div class="sub">
@@ -225,24 +233,28 @@ html.calm #fxb{opacity:.6;filter:grayscale(1)}
   </div>
 </section>
 
+<!-- Menu che mostra gli argomenti disponibili per le flashcard. -->
 <section class="view" id="cardmenu">
   <div class="top"><button class="back" onclick="go('home')">← Home</button><h2>Flashcard</h2></div>
   <p class="lead">Scegli un argomento da ripassare.</p>
   <div class="sub" id="topics"></div>
 </section>
 
+<!-- Menu per scegliere l’argomento con parole da ripassare. -->
 <section class="view" id="errmenu">
   <div class="top"><button class="back" onclick="go('cardmenu')">← Argomenti</button><h2>🎯 Errori frequenti</h2></div>
   <p class="lead">Scegli un argomento: troverai le parole in cui hai sbagliato o chiesto aiuto.</p>
   <div class="sub" id="errs"></div>
 </section>
 
+<!-- Schermata con le sezioni del singolo argomento. -->
 <section class="view" id="subtopics">
   <div class="top"><button class="back" onclick="go('cardmenu')">← Argomenti</button><h2 id="subTitle"></h2></div>
   <p class="lead">Scegli una sezione.</p>
   <div class="sub" id="subs"></div>
 </section>
 
+<!-- Modulo per creare o modificare argomenti e caricare il vocabolario. -->
 <section class="view" id="addtopic">
   <div class="top"><button class="back" onclick="go('cardmenu')">← Argomenti</button><h2 id="atitle">Nuovo argomento</h2></div>
   <div class="row" style="margin-top:0;flex-wrap:nowrap"><input type="text" id="temoji" maxlength="12" aria-label="Emoji" placeholder="📚" style="margin:0;width:78px;text-align:center;font-size:1.5rem;flex:none"><input type="text" id="tname" placeholder="Titolo (es. Travel and holidays)" style="margin:0"></div>
@@ -256,8 +268,10 @@ html.calm #fxb{opacity:.6;filter:grayscale(1)}
   <div class="row"><button class="btn" id="tsave">Salva argomento</button></div>
 </section>
 
+<!-- Schermata di studio: domanda, risposta, indizio e avanzamento. -->
 <section class="view" id="cards">
   <div class="top"><button class="back" onclick="backCards()">← Indietro</button><h2 id="deckTitle">Flashcard</h2></div>
+  <!-- Barra di avanzamento che mostra quante flashcard sono state completate. -->
   <div class="bar"><i id="bar"></i></div>
   <div class="meta"><span id="pos"></span><span id="sc"></span></div>
   <div class="card" id="card">
@@ -269,8 +283,11 @@ html.calm #fxb{opacity:.6;filter:grayscale(1)}
     <div id="inp">
       <input type="text" id="ans" placeholder="Scrivi la traduzione…" autocomplete="off" autocapitalize="off" spellcheck="false">
       <div class="row" style="justify-content:center">
+        <!-- Pulsante per verificare la traduzione inserita. -->
         <button class="btn" id="chk">Verifica</button>
+        <!-- Pulsante per mostrare un indizio sulla parola inglese. -->
         <button class="btn ghost" id="hb">💡 Indizio</button>
+        <!-- Pulsante per saltare la carta e vedere la risposta corretta. -->
         <button class="btn ghost" id="skip">Non lo so</button>
       </div>
     </div>
@@ -280,6 +297,7 @@ html.calm #fxb{opacity:.6;filter:grayscale(1)}
   <div class="row" style="justify-content:center"><button class="btn ghost" onclick="restartDeck()">↺ Ricomincia (mescola)</button></div>
 </section>
 
+<!-- Ripasso delle strutture linguistiche e quiz di verifica. -->
 <section class="view" id="review">
   <div class="top"><button class="back" onclick="go('menu')">← Indietro</button><h2>Ripasso</h2></div>
   <div class="tabs" id="tabs"></div>
@@ -288,6 +306,7 @@ html.calm #fxb{opacity:.6;filter:grayscale(1)}
   <div class="quiz" style="margin-top:30px"><h3 id="qt">Quiz veloce</h3><span class="lead" id="qs"></span><div id="quiz"></div></div>
 </section>
 
+<!-- Esercizio per descrivere un’immagine scrivendo o parlando. -->
 <section class="view" id="describe">
   <div class="top"><button class="back" onclick="go('menu')">← Indietro</button><h2>Descrivi l'immagine</h2></div>
   <div class="pic" id="pic">Carico l'immagine…</div>
@@ -316,12 +335,15 @@ html.calm #fxb{opacity:.6;filter:grayscale(1)}
 </div>
 <button id="fxb" aria-label="Attiva o disattiva gli effetti" title="Effetti">✨</button>
 <script>
+/* Avvio JavaScript: selettori DOM e funzioni di supporto. */
+/* Selettore rapido per trovare elementi HTML tramite selettore CSS. */
 const $=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* Mostra la schermata richiesta e aggiorna i contenuti che ne hanno bisogno. */
 function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));scrollTo(0,0);if(id==='review')buildReview();if(id==='cardmenu')renderTopics();if(id!=='describe'){stopMic();$('#tr').classList.add('hidden')}}
 function speak(t,l='en-GB'){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=l;speechSynthesis.speak(u)}catch(e){}}
 
-/* ---------- FLASHCARDS ---------- */
+/* ---------- FLASHCARDS: dati, creazione argomenti e gestione dei mazzi ---------- */
 const RAW=`Appuntamento al buio|a blind date
 Amore a prima vista|love at first sight
 Essere attratti da qualcuno|to be attracted to somebody
@@ -409,36 +431,128 @@ const SNAP='eng_topic_initial';
 const loadSnap=()=>{try{return JSON.parse(localStorage.getItem(SNAP))||{}}catch(e){return{}}};
 const saveSnap=o=>{try{localStorage.setItem(SNAP,JSON.stringify(o))}catch(e){}};
 const clone=o=>JSON.parse(JSON.stringify(o));
-function initialTopic(id){if(id==='u21')return{id:'u21',title:UT,emoji:'💞',description:'Love, friendship, family, marriage, birth e verbi utili.',sections:unitData(),cards:unitData().flatMap(x=>x.cards)};return null}
+function initialTopic(id){
+  if(id==='u21')return{id:'u21',title:UT,emoji:'💞',description:'Love, friendship, family, marriage, birth e verbi utili.',sections:unitData(),cards:unitData().flatMap(x=>x.cards)};
+  if(id==='u22'){const sections=illnessData();return{id:'u22',title:ILLNESS_TITLE,emoji:'🩺',description:'Impara il vocabolario inglese per parlare di malattie, infortuni, sintomi e cure.',sections,cards:sections.flatMap(x=>x.cards)}}
+  return null
+}
 function ensureSnapshot(id,current){const all=loadSnap();if(!all[id]){all[id]=clone(current);saveSnap(all)}return all[id]}
-function isModified(id,current){const all=loadSnap();if(!all[id]){const base=id==='u21'?initialTopic('u21'):current;if(base){all[id]=clone(base);saveSnap(all)}return false}return JSON.stringify(all[id])!==JSON.stringify(current)}
+function isModified(id,current){const all=loadSnap();if(!all[id]){const base=['u21','u22'].includes(id)?initialTopic(id):current;if(base){all[id]=clone(base);saveSnap(all)}return false}return JSON.stringify(all[id])!==JSON.stringify(current)}
+/* Regole che scelgono automaticamente un’emoji in base al titolo dell’argomento. */
 const EMO=[[/viagg|travel|holiday|vacanz|vacation|touris|turism/,'✈️'],[/cibo|food|cook|cucin|ristor|restaurant|\beat|dieta|diet|bevand|drink/,'🍽️'],[/scuol|school|stud|universit|educat|lesson|\bclass/,'🎓'],[/lavor|\bwork|\bjob|career|carrier|office|business|profession/,'💼'],[/salute|health|medic|doctor|ospedal|hospital|body|corpo|illness|malatt/,'🩺'],[/sport|\bgym|fitness|footbal|calcio|palestra|exercise|allenam/,'🏅'],[/music|canzon|\bsong|concert/,'🎵'],[/\bfilm|cinema|movie|\btv\b|televis|theatre|teatro/,'🎬'],[/tech|computer|internet|phone|digital|informat|software|online/,'💻'],[/money|soldi|\bbank|banca|econom|financ|price|prezz/,'💰'],[/\bshop|negozi|acquist|spesa|market|clothes|vestit|fashion|moda|abbigl/,'🛍️'],[/house|\bcasa|\bhome|furnitur|arred|apartment|appartament/,'🏠'],[/animal|\bpet\b|\bdog|\bcane|gatto|\bcat\b/,'🐾'],[/weather|meteo|clima|temperatur|\brain|pioggia/,'⛅'],[/nature|natura|environment|ambient|pianet|planet|pollution|inquin/,'🌿'],[/\bcity|citt|\btown|urban|transport|traffic|trasport|train|treno/,'🏙️'],[/feeling|emozion|emotion|sentiment|\bmood|umore/,'😊'],[/personal|caratter|character|aspett|appearance|descri/,'🙂'],[/\bart\b|\barte|museo|museum|paint|dipint|literatur|letteratur|\bbook|\blibr|\bread|lettur/,'🎨'],[/\blove|\bamor|romanc|dating|appuntament/,'❤️'],[/friend|amic|social|relation|relazion/,'🤝'],[/family|famigli|parent/,'👨‍👩‍👧‍👦'],[/wedding|marriage|matrimon|nozze|\bspos/,'💍'],[/birth|nascit|baby|bimb|neonat|pregnan|gravid/,'👶'],[/\bverb|espression|expression|phrasal|idiom|modi di dire/,'💬'],[/\btime|\btempo\b|\bdate|calendar|giorni|orari|routine|daily|quotidian/,'⏰'],[/crime|\blaw|legge|polic|giustiz|justice|court/,'⚖️'],[/politic|govern|elezion|election/,'🏛️'],[/scienc|scienz|\bspace|spazio|physic|fisic|chemis|chimic|biolog/,'🔬'],[/hobby|free time|tempo libero|leisure|\bgame|gioc/,'🎲'],[/party|festa|celebrat|\bevent|natale|christmas|birthday|compleanno/,'🎉'],[/\bnews|media|giornal|journal|press/,'📰'],[/gramm|\btense|tempi|preposit|articol/,'🧩'],[/danger|rischi|safety|sicurezz|accident|incident/,'⚠️']];
 function emojiFor(t){t=(t||'').toLowerCase();for(const [r,e] of EMO)if(r.test(t))return e;return '📚'}
 const EM_RE=/(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic}\uFE0F?|[\u{1F3FB}-\u{1F3FF}])*)/u;
+/* Converte le righe "inglese (italiano)" in oggetti utilizzabili dalle flashcard. */
 function parseList(t){return t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
   const m=l.match(/^(.+?)\s*\((.+)\)\s*$/)||l.match(/^(.+?)\s*[|=;]\s*(.+)$/);if(!m)return null;
   const en=m[1].replace(/\bsb\b/gi,'somebody').replace(/\bsth\b/gi,'something').trim(),it=m[2].trim();
   return en&&it?{it:it[0].toUpperCase()+it.slice(1),alts:en.split(/\s+\/\s+/).map(x=>x.trim()).filter(Boolean)}:null}).filter(Boolean)}
+/* Divide il testo in sezioni usando le righe che iniziano con #. */
 function parseSecs(t,name,emo){const secs=[];let cur={name,emoji:emo,lines:[]};
   t.split('\n').forEach(l=>{const m=l.trim().match(/^#+\s*(.+)$/);if(m){secs.push(cur);const em=m[1].match(EM_RE),nm=m[1].replace(new RegExp(EM_RE.source,'gu'),'').trim();cur={name:nm||name,emoji:em?em[1]:emojiFor(nm),lines:[]}}else cur.lines.push(l)});
   secs.push(cur);return secs.map(x=>({name:x.name,emoji:x.emoji,cards:parseList(x.lines.join('\n'))})).filter(x=>x.cards.length)}
+/* Converte le sezioni salvate in testo modificabile nel modulo dell’argomento. */
 const toText=secs=>secs.map(x=>`#${x.name} ${x.emoji||emojiFor(x.name)}\n`+x.cards.map(c=>`${c.alts.join(' / ')} (${c.it})`).join('\n')).join('\n\n');
 const HK='eng_hidden',UT='21 · Relationships and important life events';
 const loadH=()=>{try{return JSON.parse(localStorage.getItem(HK))||[]}catch(e){return[]}};
 const saveH=a=>{try{localStorage.setItem(HK,JSON.stringify(a))}catch(e){}};
 const unitData=()=>BUILT.map(b=>({name:b[2],emoji:b[1],cards:RAW.filter((_,i)=>(G[b[0]]||[]).some(r=>i>=r[0]&&i<=r[1]))}));
+/* Vocabolario predefinito dell’argomento 22, organizzato nelle tre sezioni del libro. */
+const ILLNESS_TITLE='22 · Illness and injury';
+const ILLNESS_TEXT=`#Illnesses 🤒
+blocked nose (naso chiuso)
+coma (coma)
+concussion (commozione cerebrale)
+diarrhoea (diarrea)
+drowsiness (sonnolenza)
+itch (prurito)
+nausea (nausea)
+numbness (insensibilità)
+pain (dolore acuto ma solitamente di breve durata)
+ache (dolore meno acuto ma di lunga durata)
+pins and needles (formicolio)
+rash (eruzione cutanea)
+runny nose (naso che cola)
+sharp pain (fitta)
+stiffness (indolenzimento)
+swelling (gonfiore)
+tummy ache (mal di pancia)
+to choke (strozzarsi)
+to feel dizzy (avere giramenti di testa)
+to feel faint (sentirsi svenire)
+to feel sick (avere la nausea / non sentirsi bene)
+to lose consciousness (perdere conoscenza)
+to shiver (avere i brividi)
+to throb (pulsare)
+to vomit / to throw up (rimettere / vomitare)
+to be allergic to (essere allergico a)
+to have a cold (avere il raffreddore)
+to have a temperature (avere la febbre)
+#Injuries 🩹
+bite (morso)
+blister (vescica / bolla)
+break (rottura)
+bruise (livido)
+burn (scottatura)
+cut (taglio)
+fracture (frattura)
+graze (escoriazione)
+inflamed (infiammato)
+lump (bitorzolo / nodulo)
+scratch (graffio)
+sting (puntura)
+strain (strappo)
+wound (ferita)
+to bleed (sanguinare)
+to limp (zoppicare)
+to pull a muscle (stirarsi un muscolo)
+to tear a muscle (strapparsi un muscolo)
+to twist an ankle (storcersi una caviglia)
+to scrape a knee (sbucciarsi un ginocchio)
+to get cramp (avere un crampo)
+to have a black eye (avere un occhio nero)
+#Healing 💊
+A & E / accident and emergency / ER / emergency room (pronto soccorso)
+anti-inflammatory (antinfiammatorio)
+antiseptic (antisettico)
+convalescence (convalescenza)
+first-aid box (cassetta di pronto soccorso)
+intensive care (terapia intensiva)
+painkiller (antidolorifico)
+plaster (cerotto)
+plaster cast (gesso)
+remedy (cura)
+side effect (effetto collaterale)
+ward (reparto / corsia)
+to diagnose (diagnosticare)
+to get better / to recover (rimettersi)
+to have stitches (mettere i punti)
+to heal (guarire)
+to prescribe (prescrivere)
+to take pills (prendere pillole)
+to take tablets (prendere compresse)
+to take capsules (prendere capsule)
+a syringe (siringa)
+to have an injection (fare un'iniezione)
+to put on a bandage (mettere una benda)
+to put on a sling (mettere una fascia / mettere un tutore)`;
+const illnessData=()=>parseSecs(ILLNESS_TEXT,ILLNESS_TITLE,'🩺');
+
 const tl=(id,e,t,d,alt,menu)=>`<div class="tw"><button class="tile${alt?' alt':''}" data-t="${id}"><div><div class="ic">${e}</div><h3>${esc(t)}</h3></div><span>${esc(d)}</span></button>${menu?`<button class="dots" data-m="${id}" aria-label="Opzioni argomento">⋮</button>`:''}</div>`;
+/* Crea le card degli argomenti, inclusi i due argomenti predefiniti e quelli personalizzati. */
 function renderTopics(){
-  const c=loadC(),ov=c.find(x=>x.id==='u21'),rest=c.filter(x=>x.id!=='u21');let i=0;
-  const unit=ov?tl('u21',ov.emoji||'💞',ov.title,ov.description||makeDescription(ov.title,ov.sections||[]),i++%2,1):tl('u21','💞',UT,'Love, friendship, family, marriage, birth e verbi utili.',i++%2,1);
-  $('#topics').innerHTML=unit+rest.map(x=>tl(x.id,x.emoji||emojiFor(x.title),x.title,x.description||makeDescription(x.title,x.sections||[]),i++%2,1)).join('')+tl('errors','🎯','Errori frequenti','Ripassa le parole in cui hai sbagliato o chiesto aiuto.',i++%2,0)+'<div class="tw"><button class="tile add" data-add="1"><div><div class="ic">➕</div><h3>Aggiungi argomento</h3></div><span>Carica la foto del libro e creo le flashcard.</span></button></div>'
+  const c=loadC(),overrides=['u21','u22'].map(id=>c.find(x=>x.id===id)),rest=c.filter(x=>!['u21','u22'].includes(x.id));let i=0;
+  const unit21=overrides[0]?tl('u21',overrides[0].emoji||'💞',overrides[0].title,overrides[0].description||makeDescription(overrides[0].title,overrides[0].sections||[]),i++%2,1):tl('u21','💞',UT,'Love, friendship, family, marriage, birth e verbi utili.',i++%2,1);
+  const unit22=overrides[1]?tl('u22',overrides[1].emoji||'🩺',overrides[1].title,overrides[1].description||makeDescription(overrides[1].title,overrides[1].sections||[]),i++%2,1):tl('u22','🩺',ILLNESS_TITLE,'Malattie, sintomi, infortuni e cure.',i++%2,1);
+  $('#topics').innerHTML=unit21+unit22+rest.map(x=>tl(x.id,x.emoji||emojiFor(x.title),x.title,x.description||makeDescription(x.title,x.sections||[]),i++%2,1)).join('')+tl('errors','🎯','Errori frequenti','Ripassa le parole in cui hai sbagliato o chiesto aiuto.',i++%2,0)+'<div class="tw"><button class="tile add" data-add="1"><div><div class="ic">➕</div><h3>Aggiungi argomento</h3></div><span>Carica la foto del libro e creo le flashcard.</span></button></div>'
 }
 let topic=null;
 function topicSecs(id){
   const c=loadC().find(x=>x.id===id);
   if(id==='u21'&&!c)return{id:'u21',e:'💞',title:'Relationships and important life events',secs:[...BUILT.map(b=>({k:b[0],e:b[1],t:b[2],d:b[3]})),{k:'all21',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'}]};
+  if(id==='u22'&&!c)return{id:'u22',e:'🩺',title:ILLNESS_TITLE,secs:[...illnessData().map((x,i)=>({k:'ill22:'+i,e:x.emoji,t:x.name,d:x.cards.length+' parole'})),{k:'all22',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'}]};
   if(!c)return null;
-  const secs=(c.sections||[{name:c.title,cards:c.cards}]).map((x,i)=>({k:'c:'+c.id+':'+i,e:x.emoji||emojiFor(x.name),t:x.name,d:x.cards.length+' parole'}));if(id==='u21')secs.push({k:'all21',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'});return{id:c.id,e:c.emoji||emojiFor(c.title),title:c.title,secs}}
+  const secs=(c.sections||[{name:c.title,cards:c.cards}]).map((x,i)=>({k:'c:'+c.id+':'+i,e:x.emoji||emojiFor(x.name),t:x.name,d:x.cards.length+' parole'}));if(id==='u21')secs.push({k:'all21',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'});if(id==='u22')secs.push({k:'all22',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'});return{id:c.id,e:c.emoji||emojiFor(c.title),title:c.title,secs}}
 function openTopic(id){
   topic=topicSecs(id);if(!topic)return;
   if(topic.secs.length===1){startCards(topic.secs[0].k);return}
@@ -450,22 +564,23 @@ let popId=null,editId=null,descEdited=false;
 function makeDescription(title,secs){const names=(secs||[]).map(x=>x.name).filter(Boolean);const unique=[...new Set(names)];return unique.length>1?`Ripassa ${title}: ${unique.slice(0,5).join(', ')}${unique.length>5?' e altri temi':''}.`:`Impara e ripassa il vocabolario di ${title}, con parole ed espressioni utili.`}
 $('#topics').onclick=e=>{
   const d=e.target.closest('[data-m]');
-  if(d){popId=d.dataset.m;const p=$('#pop'),r=d.getBoundingClientRect();const current=popId==='u21'? (loadC().find(x=>x.id==='u21')||initialTopic('u21')):loadC().find(x=>x.id===popId);if(current)ensureSnapshot(popId,current);p.querySelector('[data-a=restore]').classList.toggle('hidden',!(current&&isModified(popId,current)));p.querySelector('[data-a=restore]').textContent='↺ Ripristina configurazione iniziale';p.querySelector('[data-a=edit]').classList.toggle('hidden',popId==='errors');p.querySelector('[data-a=del]').classList.toggle('hidden',popId==='errors'||popId==='u21');p.classList.remove('hidden');p.style.top=Math.min(r.bottom+6,innerHeight-p.offsetHeight-8)+'px';p.style.left=Math.max(8,Math.min(innerWidth-p.offsetWidth-8,r.right-p.offsetWidth))+'px';return}
+  if(d){popId=d.dataset.m;const p=$('#pop'),r=d.getBoundingClientRect();const current=['u21','u22'].includes(popId)?(loadC().find(x=>x.id===popId)||initialTopic(popId)):loadC().find(x=>x.id===popId);if(current)ensureSnapshot(popId,current);p.querySelector('[data-a=restore]').classList.toggle('hidden',!(current&&isModified(popId,current)));p.querySelector('[data-a=restore]').textContent='↺ Ripristina configurazione iniziale';p.querySelector('[data-a=edit]').classList.toggle('hidden',popId==='errors');p.querySelector('[data-a=del]').classList.toggle('hidden',popId==='errors'||['u21','u22'].includes(popId));p.classList.remove('hidden');p.style.top=Math.min(r.bottom+6,innerHeight-p.offsetHeight-8)+'px';p.style.left=Math.max(8,Math.min(innerWidth-p.offsetWidth-8,r.right-p.offsetWidth))+'px';return}
   if(e.target.closest('[data-add]')){openEditor(null);return}
   const t=e.target.closest('[data-t]');if(t){if(t.dataset.t==='errors')openErrMenu();else openTopic(t.dataset.t)}};
 document.addEventListener('click',e=>{if(!e.target.closest('#pop')&&!e.target.closest('[data-m]'))$('#pop').classList.add('hidden')});
 $('#pop').onclick=async e=>{
   const a=e.target.closest('[data-a]');if(!a)return;$('#pop').classList.add('hidden');
   const id=popId;if(a.dataset.a==='edit'){openEditor(id);return}
-  const c=loadC().find(x=>x.id===id),title=c?c.title:id==='u21'?UT:'';
-  if(a.dataset.a==='restore'){const snaps=loadSnap(),base=snaps[id]||(id==='u21'?initialTopic('u21'):null);if(!base)return;let arr=loadC().filter(x=>x.id!==id);if(id==='u21'){saveC(arr);saveH(loadH().filter(x=>x!=='u21'))}else{saveC([...arr,clone(base)]);const er=loadE();delete er[id];saveE(er)}renderTopics();return}
-  if(id==='errors'||id==='u21')return;
-  if(await ask(`Sei sicuro di voler eliminare l'argomento «${title}»?`,'Elimina')){if(id==='u21')saveH([...loadH(),'u21']);else{saveC(loadC().filter(x=>x.id!==id));const o=loadE();delete o[id];saveE(o)}renderTopics()}};
+  const c=loadC().find(x=>x.id===id),title=c?c.title:id==='u21'?UT:id==='u22'?ILLNESS_TITLE:'';
+  if(a.dataset.a==='restore'){const snaps=loadSnap(),base=snaps[id]||(['u21','u22'].includes(id)?initialTopic(id):null);if(!base)return;let arr=loadC().filter(x=>x.id!==id);if(['u21','u22'].includes(id)){saveC(arr);saveH(loadH().filter(x=>x!==id))}else{saveC([...arr,clone(base)]);const er=loadE();delete er[id];saveE(er)}renderTopics();return}
+  if(id==='errors'||['u21','u22'].includes(id))return;
+  if(await ask(`Sei sicuro di voler eliminare l'argomento «${title}»?`,'Elimina')){if(['u21','u22'].includes(id))saveH([...loadH(),id]);else{saveC(loadC().filter(x=>x.id!==id));const o=loadE();delete o[id];saveE(o)}renderTopics()}};
+/* Apre il modulo per creare un argomento nuovo o modificare quello selezionato. */
 function openEditor(id){
   editId=id;let c=null;
-  if(id)c=id==='u21'?(loadC().find(x=>x.id==='u21')||{title:UT,emoji:'💞',description:'Love, friendship, family, marriage, birth e verbi utili.',sections:unitData()}):loadC().find(x=>x.id===id);
+  if(id)c=['u21','u22'].includes(id)?(loadC().find(x=>x.id===id)||initialTopic(id)):loadC().find(x=>x.id===id);
   if(id&&!c)return;
-  if(id)ensureSnapshot(id,id==='u21'?(loadC().find(x=>x.id==='u21')||initialTopic('u21')):c);
+  if(id)ensureSnapshot(id,['u21','u22'].includes(id)?(loadC().find(x=>x.id===id)||initialTopic(id)):c);
   $('#tname').value=c?c.title:'';$('#temoji').value=c?(c.emoji||''):'';
   $('#tlist').value=c?toText(c.sections||[{name:c.title,emoji:c.emoji,cards:c.cards}]):'';
   $('#tdesc').value=c?(c.description||makeDescription(c.title,c.sections||[])):'';descEdited=!!(c&&c.description);
@@ -503,10 +618,12 @@ async function prepImage(file){
   x.putImageData(d,0,0);return c}
 function resetPick(){const p=$('#tpick');p.classList.remove('done');p.textContent='📷 Scegli foto'}
 $('#tfile').addEventListener('change',()=>{const f=$('#tfile').files[0],p=$('#tpick');p.classList.toggle('done',!!f);p.textContent=f?'✅ Foto scelta':'📷 Scegli foto'});
+/* Aggiunge al campo testo le parole lette da una foto o incollate dagli appunti. */
 function addToList(lines,st,src){
   const cur=$('#tlist').value.trim();
   $('#tlist').value=(cur?cur+'\n':'')+lines.join('\n');
   st.textContent=lines.length?`${src}: ho trovato ${lines.length} parole. Controlla e correggi il testo, poi salva.`:'Non ho trovato coppie «inglese (italiano)»: prova una foto più nitida o scrivile a mano qui sotto.'}
+/* Avvia la lettura OCR della foto per estrarre il vocabolario automaticamente. */
 $('#tread').onclick=async()=>{
   const f=$('#tfile').files[0],st=$('#tstat');
   if(!f){st.textContent='Scegli prima una foto.';return}
@@ -523,18 +640,22 @@ $('#tread').onclick=async()=>{
     await w.terminate();
     addToList(acc,st,'Lettura automatica')
   }catch(e){st.textContent='Non riesco a leggere la foto (serve internet). Prova «Incolla testo» oppure scrivi le parole a mano qui sotto.'}};
+/* Importa dagli appunti il testo copiato dall’utente. */
 $('#tpaste').onclick=async()=>{
   const st=$('#tstat');
   try{const t=await navigator.clipboard.readText();if(!t.trim()){st.textContent='Gli appunti sono vuoti.';return}
     const lines=cleanOCR(t);if(lines.length)addToList(lines,st,'Testo incollato');else{$('#tlist').value=($('#tlist').value.trim()?$('#tlist').value.trim()+'\n':'')+t.trim();st.textContent='Testo incollato: sistema le righe nel formato «english (italiano)».'}}
   catch(e){st.textContent='Non posso leggere gli appunti da qui: tieni premuto nella casella qui sotto e scegli «Incolla».'}};
+/* Mostra gli argomenti con il numero di parole da ripassare per gli errori. */
 function openErrMenu(){
-  const o=loadE(),list=[],cs=[...loadC()].sort((a,b)=>(b.id==='u21')-(a.id==='u21'));
-  if(!cs.some(x=>x.id==='u21'))list.push({id:'u21',e:'💞',t:UT});
+  const o=loadE(),list=[],cs=[...loadC()].sort((a,b)=>(['u21','u22'].includes(b.id))-(['u21','u22'].includes(a.id)));
+  if(!cs.some(x=>x.id==='u21')&&!loadH().includes('u21'))list.push({id:'u21',e:'💞',t:UT});
+  if(!cs.some(x=>x.id==='u22')&&!loadH().includes('u22'))list.push({id:'u22',e:'🩺',t:ILLNESS_TITLE});
   cs.forEach(c=>list.push({id:c.id,e:c.emoji||emojiFor(c.title),t:c.title}));
   $('#errs').innerHTML=list.map((x,i)=>{const n=Object.keys(o[x.id]||{}).length;return tl(x.id,x.e,x.t,n?n+' parole da ripassare':'Nessun errore, bravo! 🌟',i%2)}).join('')||'<p class="lead">Nessun argomento.</p>';
   go('errmenu')}
 $('#errs').onclick=e=>{const t=e.target.closest('[data-t]');if(t)startErrors(t.dataset.t)};
+/* Salva titolo, descrizione, sezioni e tutte le flashcard dell’argomento. */
 $('#tsave').onclick=()=>{
   const name=$('#tname').value.trim(),st=$('#tstat'),emo=($('#temoji').value.match(EM_RE)||[])[1]||emojiFor(name),secs=parseSecs($('#tlist').value,name,emo),description=$('#tdesc').value.trim()||makeDescription(name,secs);
   if(!name){st.textContent='Scrivi un titolo per l\'argomento.';return}
@@ -543,7 +664,7 @@ $('#tsave').onclick=()=>{
   if(editId){const ix=a.findIndex(x=>x.id===editId);if(ix>=0)a[ix]=rec;else if(editId==='u21')a.push(rec);else{st.textContent="Non trovo più l'argomento da modificare. Riaprilo e riprova.";return}}else a.push(rec);
   if(!saveC(a)){st.textContent='Impossibile salvare: il browser blocca la memoria locale.';return}
   const snaps=loadSnap();if(!snaps[savingId]){snaps[savingId]=clone(rec);saveSnap(snaps)}
-  if(editId==='u21')saveH(loadH().filter(x=>x!=='u21'));
+  if(['u21','u22'].includes(editId))saveH(loadH().filter(x=>x!==editId));
   editId=null;descEdited=false;$('#tname').value='';$('#temoji').value='';$('#tdesc').value='';$('#tlist').value='';$('#tfile').value='';resetPick();st.textContent='';go('cardmenu')};
 
 let Q=[],DECK=[],cur=null,right=0,wrong=0,total=0,activeGroup='all';
@@ -554,16 +675,23 @@ const saveE=o=>{try{localStorage.setItem(EK,JSON.stringify(o))}catch(e){}};
 function secOf(c){
   if(c.sec)return c.sec;
   if(errMode&&errTopic==='u21')return '💞 Relationships and important life events';
+  if(errMode&&errTopic==='u22')return '🩺 Illness and injury';
   if(activeGroup.startsWith('c:')){const x=topic&&topic.secs.find(y=>y.k===activeGroup);return x?x.e+' '+x.t:''}
   const i=RAW.indexOf(c),b=BUILT.find(b=>G[b[0]].some(r=>i>=r[0]&&i<=r[1]));return b?b[1]+' '+b[2]:''}
 const tid=()=>errMode?errTopic:(topic&&topic.id);
 const errKey=c=>c.it+'|'+secOf(c);
+/* Registra una risposta errata per poterla ripassare in seguito. */
 function addErr(c){const id=tid();if(!id)return;const o=loadE(),t=o[id]=o[id]||{},k=errKey(c);t[k]=t[k]||{it:c.it,alts:c.alts,sec:secOf(c),n:0,streak:0};t[k].n=(t[k].n||0)+1;t[k].streak=0;t[k].last=Date.now();saveE(o)}
+/* Aggiorna la serie di risposte corrette e rimuove l’errore dopo tre successi. */
 function delErr(c){const id=tid(),o=loadE(),k=errKey(c);if(id&&o[id]&&o[id][k]){const item=o[id][k];item.streak=(item.streak||0)+1;item.last=Date.now();if(item.streak>=3)delete o[id][k];saveE(o)}}
+/* Restituisce il mazzo completo o la sezione specifica selezionata dall’utente. */
 function deckFor(g){
   if(g==='all21'){const u=loadC().find(x=>x.id==='u21');return u?u.cards:RAW}
+  if(g==='all22'){const u=loadC().find(x=>x.id==='u22');return u?u.cards:illnessData().flatMap(x=>x.cards)}
+  if(g.startsWith('ill22:')){const i=+g.split(':')[1],u=loadC().find(x=>x.id==='u22');return u?(u.sections||[])[i]?.cards||[]:illnessData()[i]?.cards||[]}
   if(g.startsWith('c:')){const [,id,i]=g.split(':'),c=loadC().find(x=>x.id===id);return c?(c.sections||[{cards:c.cards}])[+i].cards:[]}
   return RAW.filter((_,i)=>(G[g]||[]).some(r=>i>=r[0]&&i<=r[1]))}
+/* Inizializza una sessione: mescola le carte e azzera punteggio e progressi. */
 function beginDeck(){firstDone=new Set();sess={ok:0,ko:[]};Q=DECK.map((_,i)=>i).sort(()=>Math.random()-.5);right=wrong=0;total=Q.length;go('cards');nextC()}
 function startCards(g){
   errMode=false;activeGroup=g;const sec=topic&&topic.secs.find(x=>x.k===g);
@@ -575,6 +703,7 @@ function startErrors(id){
   DECK=Object.values(loadE()[id]||{});beginDeck()}
 function restartDeck(){errMode?startErrors(errTopic):startCards(activeGroup)}
 function countUp(el,n){let i=0;const t=setInterval(()=>{el.textContent=i;if(i>=n)clearInterval(t);i++},70)}
+/* Mostra il riepilogo finale con il punteggio della sessione. */
 function finish(){
   if(total)burst(innerWidth/2,innerHeight/2);
   $('#front').textContent=total?'Fatto! 🎉':(errMode?'Nessun errore qui 🌟':'Nessuna carta qui');
@@ -583,6 +712,7 @@ function finish(){
   $('#sum').classList.toggle('hidden',!total);if(!total)return;
   countUp($('#sok'),sess.ok);countUp($('#sko'),sess.ko.length);
   $('#srev').classList.toggle('hidden',!sess.ko.length);$('#perf').classList.toggle('hidden',!!sess.ko.length)}
+/* Prepara la prossima carta e aggiorna domanda, suggerimento e avanzamento. */
 function nextC(){
   hintLv=0;hinted=false;$('#hb').classList.remove('off');$('#hb').textContent='💡 Indizio';
   if(!Q.length){finish();return}
@@ -592,6 +722,7 @@ function nextC(){
   $('#inp').classList.remove('hidden');$('#fb').classList.add('hidden');
   $('#pos').textContent=`Restano ${Q.length} carte`;$('#sc').textContent=`✓ ${right}  ✗ ${wrong}`;
   $('#bar').style.width=((total-Q.length)/total*100)+'%';$('#ans').focus()}
+/* Controlla la risposta digitata, registra errori e mostra la traduzione corretta. */
 function grade(skip){
   const u=norm($('#ans').value);let ok=false,near=false;
   if(!skip&&u)for(const a of cur.alts){const n=norm(a);if(n===u)ok=true;else if(n.length>5&&lev(n,u)<=1)near=true}
@@ -620,7 +751,7 @@ $('#srev').onclick=()=>{
 $('#ans').addEventListener('keydown',e=>{if(e.key==='Enter')grade(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('#cards').classList.contains('on')&&!$('#fb').classList.contains('hidden'))nextC()});
 
-/* ---------- REVIEW ---------- */
+/* ---------- RIPASSO: contenuti, schede e quiz ---------- */
 const SEC={
  who:{t:'1 · Chi? (WHO)',l:'Cosa c\'è nell\'immagine, com\'è fatta la gente e come si sente.',p:[
   ['In the picture I can see …','In the picture I can see a family of five.'],
@@ -656,6 +787,7 @@ QB.what.push(['At the moment, the man ___ on a laptop.','is typing','types','typ
 QB.where.push(['There is a bench ___ the tree.','next to','next at','beside to'],['The clouds are ___ the sky.','in','on','at'],['The boy is hiding ___ the door.','behind','between','among'],['There is a small boat ___ the lake.','on','at','between'],['In the ___ corner of the picture, there is a signpost.','bottom left','left bottom','down left'],['The woman is standing ___ the two men.','between','among','behind of'],['The cars are parked ___ the street.','along','at','between to'],['The painting is hanging ___ the wall.','on','at','in'],['A mountain is visible ___ the distance.','in','on','at'],['There is a river ___ the middle of the picture.','in','at','on'],['The girl is sitting ___ her mother.','next to','between to','at next'],['___ the bottom of the picture, there is a dog.','At','On','To'],['People are queuing ___ the entrance.','at','in','by to'],['The house is ___ the trees, so it is hard to see.','surrounded by','surrounded of','surrounding by']);
 QB.unsure.push(['I\'m not sure, but she ___ be his sister.','might','does','is'],['It ___ like a very old building.','looks','is','makes'],['They ___ be going to a party; they\'re all dressed up.','could','do','go'],['I\'m not certain, but that ___ be a church.','might','does','makes'],['The man ___ to be sleeping.','seems','makes','does'],['It ___ that they are enjoying themselves.','seems','makes','goes'],['It\'s hard to tell, but I ___ it\'s a school.','think','am thinking of','would to'],['That ___ be a cat or maybe a small dog.','could','does','shall'],['They look ___ they are waiting for someone.','as if','like if','if'],['I can\'t see well, ___ it might be a taxi.','but','so','because'],['The picture isn\'t very clear, so I\'m ___ sure.','not','no','don\'t'],['She ___ be a tourist because she\'s carrying a map.','might','does','is'],['It ___ be a photo from the 1980s.','could','does','is'],['I ___ say exactly where they are.','can\'t','don\'t can','am not']);
 let revBuilt=false,curSec='who',seen={},qset=[],qsel=[],qlock=false;
+/* Costruisce la schermata di ripasso con le schede disponibili. */
 function buildReview(){
   if(revBuilt)return;revBuilt=true;
   $('#tabs').innerHTML=Object.entries(SEC).map(([k,s])=>`<button class="tab" data-k="${k}">${s.t}</button>`).join('');
@@ -666,6 +798,7 @@ function buildReview(){
     if(e.target.id==='qv')verifyQuiz();
     if(e.target.id==='qn')newQuiz()};
   showSec('who')}
+/* Genera una nuova domanda per il quiz di ripasso. */
 function newQuiz(){
   qlock=false;qsel=[];const bank=QB[curSec],sn=seen[curSec]=seen[curSec]||new Set();
   let pool=bank.map((_,i)=>i).filter(i=>!sn.has(i));
@@ -690,6 +823,7 @@ function verifyQuiz(){
   ${ko.length?`<p style="margin-top:8px">❌ Da rivedere:</p><ul style="padding-left:20px">${ko.map(x=>`<li>${x}</li>`).join('')}</ul>`:'<p style="margin-top:8px">Perfetto, nessun errore! 🎉</p>'}
   <div class="row"><button class="btn" id="qn">Altre domande</button></div></div>`;
   $('#qr').scrollIntoView({behavior:'smooth',block:'nearest'})}
+/* Mostra il contenuto della sezione di ripasso selezionata. */
 function showSec(k){
   curSec=k;const s=SEC[k];document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.k===k));
   $('#lead').textContent=s.l;
@@ -697,7 +831,7 @@ function showSec(k){
   $('#phr').onclick=e=>{const sp=e.target.closest('.spk');if(sp){e.stopPropagation();speak(sp.dataset.s);return}const c=e.target.closest('.ph');if(c)c.classList.toggle('open')};
   newQuiz()}
 
-/* ---------- DESCRIBE ---------- */
+/* ---------- DESCRIZIONE IMMAGINI: scelta immagine, microfono e valutazione ---------- */
 const u=id=>`https://unsplash.com/photos/${id}/download?force=true&w=900`;
 const PICS=[['xs0_4EN7osM','Una coppia che cucina insieme in cucina'],['wFoo0y1Hr58','Un gruppo di persone che prepara il cibo in cucina'],['m9cBmbOQCmQ','Una famiglia che cucina insieme'],['kYh-O1Jk7EE','Un uomo che aiuta una donna a cucinare'],
 ['hUS8xF6PkoM','Un gruppo di persone che gioca a calcio'],['VTI1PJD7HP8','Giovani che giocano a calcio'],
@@ -715,6 +849,7 @@ function draw(){
   if(!bag.length){bag=PICS.map((_,i)=>i).sort(()=>Math.random()-.5);if(bag.length>1&&bag[bag.length-1]===lastP){const t=bag[0];bag[0]=bag[bag.length-1];bag[bag.length-1]=t}}
   const k=bag.pop();try{localStorage.setItem(BK,JSON.stringify({n:PICS.length,b:bag}))}catch(e){}
   return k}
+/* Seleziona una nuova immagine per l’esercizio di descrizione. */
 function newPic(){
   stopMic();const id=++picId,p=$('#pic');let tries=0;
   $('#txt').value='';$('#res').classList.add('hidden');$('#micn').textContent='';
@@ -729,6 +864,7 @@ function newPic(){
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null,live=false,tmr=null,secs=0;
 const mm=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
 function micUI(){$('#mic').classList.toggle('live',live);$('#mic').textContent=live?'⏹ Stop '+mm(secs):'🎤 Parla'}
+/* Interrompe la registrazione vocale e azzera il cronometro del microfono. */
 function stopMic(){if(live&&rec){try{rec.stop()}catch(e){}}clearInterval(tmr);tmr=null;live=false;secs=0;micUI()}
 $('#mic').onclick=()=>{
   if(live){stopMic();return}
@@ -748,6 +884,7 @@ const CH=[
  ['Azione (present continuous)',/\b(is|are|'s|'re)\s+(not\s+)?\w+ing\b/i,'The man is …ing / The people are …ing'],
  ['Posizione',/foreground|background|on the (left|right)|at the (top|bottom)|in the middle|next to|in front of|behind|\bnear\b|on top of|\bunder\b/i,'In the foreground … / On the left of the picture … / next to, behind, under'],
  ['Ipotesi se non è chiaro',/looks? like|might be|could be|maybe|perhaps|seems? to/i,'It looks like a … / It might be a … / He could be …ing']];
+/* Valuta la descrizione dell’immagine rispetto agli elementi linguistici attesi. */
 function evaluate(){
   const t=$('#txt').value.trim(),w=t.split(/\s+/).filter(Boolean).length,r=$('#res');
   r.classList.remove('hidden');
@@ -769,7 +906,7 @@ function evaluate(){
 
 $('#ok').onclick=evaluate;
 
-/* ---------- TRADUTTORE ---------- */
+/* ---------- TRADUTTORE: apertura, inversione lingue e traduzione ---------- */
 let trSrc='it';
 $('#translateOpen').onclick=()=>{$('#tr').classList.remove('hidden');$('#trin').focus()};
 $('#trx').onclick=()=>$('#tr').classList.add('hidden');
@@ -781,6 +918,7 @@ async function trans(q,s,d){
   try{const j=await J(`https://api.mymemory.translated.net/get?q=${E}&langpair=${s}|${d}`);const t=j.responseData&&j.responseData.translatedText;if(t&&!/MYMEMORY WARNING/i.test(t))return{t,by:'MyMemory'}}catch(e){}
   try{const j=await J(`https://lingva.ml/api/v1/${s}/${d}/${E}`);if(j.translation)return{t:j.translation,by:'Lingva'}}catch(e){}
   return null}
+/* Gestisce la traduzione del testo inserito nel pannello dedicato. */
 async function doTrans(){
   const q=$('#trin').value.trim(),o=$('#trout'),d=trSrc==='it'?'en':'it';
   o.classList.remove('hidden');
@@ -796,7 +934,7 @@ $('#cp').onclick=()=>{
   const m=`I'm preparing for the B2 First speaking exam. Please check my picture description (who/what/where, emotions, present continuous, uncertainty phrases) and suggest improvements.\n${picUrl?'Image: '+picUrl+'\n':''}\nMy description:\n${$('#txt').value}`;
   navigator.clipboard.writeText(m).then(()=>{$('#cp').textContent='Copiato!';setTimeout(()=>$('#cp').textContent='Copia per una IA',1800)}).catch(()=>prompt('Copia questo testo:',m))};
 
-/* ---------- EFFETTI ---------- */
+/* ---------- EFFETTI: finestre di conferma, animazioni e feedback visivo ---------- */
 function ask(msg,ok){return new Promise(res=>{const d=document.createElement('div');d.className='dlg';d.innerHTML=`<div role="alertdialog"><b style="font-size:1.15rem;font-family:Fraunces,serif">${esc(msg)}</b><div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn ghost" data-r="0">Annulla</button><button class="btn" data-r="1" style="background:var(--bad);color:#3b0016">${ok}</button></div></div>`;d.onclick=e=>{const b=e.target.closest('[data-r]');if(b||e.target===d){d.remove();res(!!b&&b.dataset.r==='1')}};document.body.appendChild(d)})}
 const calm=()=>document.documentElement.classList.contains('calm');
 function burst(x,y){if(calm())return;const em=['🎉','✨','⭐','💜','🎊'];for(let i=0;i<22;i++){const c=document.createElement('span');c.className='conf';c.textContent=em[i%em.length];c.style.cssText=`left:${x}px;top:${y}px;--x:${(Math.random()-.5)*340}px;--y:${-60-Math.random()*260}px;--r:${(Math.random()-.5)*540}deg`;document.body.appendChild(c);setTimeout(()=>c.remove(),1200)}}
@@ -808,7 +946,7 @@ document.addEventListener('pointerdown',e=>{
   b.style.overflow='hidden';b.appendChild(x);setTimeout(()=>x.remove(),650);
   try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}});
 
-/* ---------- FX ---------- */
+/* ---------- EFFETTI DECORATIVI: particelle, animazioni e impostazione ridotta ---------- */
 function sparks(x,y,n=7){if(calm())return;const em=['✨','💫','⭐','🌟'];for(let i=0;i<n;i++){const c=document.createElement('span');c.className='spark';c.textContent=em[i%em.length];const a=Math.random()*6.283,d=40+Math.random()*70;c.style.cssText=`left:${x}px;top:${y}px;--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d}px;--r:${(Math.random()-.5)*360}deg`;document.body.appendChild(c);setTimeout(()=>c.remove(),850)}}
 (function(){
   const fl=$('#fl'),em=['📚','✏️','📖','🎓','🖊️','📝','🗣️','💬','🇬🇧','🇺🇸','🔤','📒','🎒','🏫','🧠','💡','🎧','🌍','☕','🫖','🗽','🔍','✍️','📓','🎤','👩‍🏫','👨‍🎓','💭','📐','🏆'];
