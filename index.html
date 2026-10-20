@@ -552,7 +552,11 @@ function topicSecs(id){
   if(id==='u21'&&!c)return{id:'u21',e:'💞',title:'Relationships and important life events',secs:[...BUILT.map(b=>({k:b[0],e:b[1],t:b[2],d:b[3]})),{k:'all21',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'}]};
   if(id==='u22'&&!c)return{id:'u22',e:'🩺',title:ILLNESS_TITLE,secs:[...illnessData().map((x,i)=>({k:'ill22:'+i,e:x.emoji,t:x.name,d:x.cards.length+' parole'})),{k:'all22',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'}]};
   if(!c)return null;
-  const secs=(c.sections||[{name:c.title,cards:c.cards}]).map((x,i)=>({k:'c:'+c.id+':'+i,e:x.emoji||emojiFor(x.name),t:x.name,d:x.cards.length+' parole'}));if(id==='u21')secs.push({k:'all21',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'});if(id==='u22')secs.push({k:'all22',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'});return{id:c.id,e:c.emoji||emojiFor(c.title),title:c.title,secs}}
+  const secs=(c.sections||[{name:c.title,cards:c.cards}]).map((x,i)=>({k:'c:'+c.id+':'+i,e:x.emoji||emojiFor(x.name),t:x.name,d:x.cards.length+' parole'}));
+  if(id==='u21')secs.push({k:'all21',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'});
+  else if(id==='u22')secs.push({k:'all22',e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'unità.'});
+  else secs.push({k:'allcustom:'+c.id,e:'🃏',t:'Tutte le parole',d:'Mazzo completo dell\'argomento.'});
+  return{id:c.id,e:c.emoji||emojiFor(c.title),title:c.title,secs}}
 function openTopic(id){
   topic=topicSecs(id);if(!topic)return;
   if(topic.secs.length===1){startCards(topic.secs[0].k);return}
@@ -688,6 +692,7 @@ function delErr(c){const id=tid(),o=loadE(),k=errKey(c);if(id&&o[id]&&o[id][k]){
 function deckFor(g){
   if(g==='all21'){const u=loadC().find(x=>x.id==='u21');return u?u.cards:RAW}
   if(g==='all22'){const u=loadC().find(x=>x.id==='u22');return u?u.cards:illnessData().flatMap(x=>x.cards)}
+  if(g.startsWith('allcustom:')){const id=g.slice('allcustom:'.length),u=loadC().find(x=>x.id===id);return u?(u.cards||((u.sections||[]).flatMap(x=>x.cards||[]))):[]}
   if(g.startsWith('ill22:')){const i=+g.split(':')[1],u=loadC().find(x=>x.id==='u22');return u?(u.sections||[])[i]?.cards||[]:illnessData()[i]?.cards||[]}
   if(g.startsWith('c:')){const [,id,i]=g.split(':'),c=loadC().find(x=>x.id===id);return c?(c.sections||[{cards:c.cards}])[+i].cards:[]}
   return RAW.filter((_,i)=>(G[g]||[]).some(r=>i>=r[0]&&i<=r[1]))}
